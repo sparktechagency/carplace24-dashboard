@@ -32,22 +32,24 @@ const Login = () => {
   const onFinish = async (values: LoginFormValues): Promise<void> => {
     try {
       console.log(values);
-      const response = (await login(values).unwrap()) as LoginResponse;
-      const { accessToken } = response?.data || {};
-      const { refreshToken } = response?.data || {};
-
-      if (rememberMe) {
-        localStorage.setItem("authToken", accessToken || "");
-        localStorage.setItem("refreshToken", refreshToken || "");
-        Cookies.set("refreshToken", refreshToken || "");
+      const res = await login(values).unwrap();
+      if (res?.success) {
+        const { accessToken } = res?.data || {};
+        const { refreshToken } = res?.data || {};
+        if (rememberMe) {
+          localStorage.setItem("authToken", accessToken || "");
+          localStorage.setItem("refreshToken", refreshToken || "");
+          Cookies.set("refreshToken", refreshToken || "");
+        } else {
+          sessionStorage.setItem("authToken", accessToken || "");
+          localStorage.setItem("refreshToken", refreshToken || "");
+          Cookies.set("refreshToken", refreshToken || "");
+        }
+        navigate("/");
+        toast.success(res?.message || "Login successful!");
       } else {
-        sessionStorage.setItem("authToken", accessToken || "");
-        localStorage.setItem("refreshToken", refreshToken || "");
-        Cookies.set("refreshToken", refreshToken || "");
+        toast.error(res?.message || "Login failed!");
       }
-
-      navigate("/");
-      toast.success("Login successful!");
     } catch (error: any) {
       toast.error(error?.data?.message || "An error occurred", {
         style: {

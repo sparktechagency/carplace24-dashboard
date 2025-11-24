@@ -1,43 +1,16 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
-import backgroundImage from "../../assets/salonGoLoginBg.png";
+import logo from "../../assets/Carplace24Logo.png";
 
 const Auth = () => {
   return (
-    <div
-      className="w-full flex items-center justify-center relative"
-      style={{
-        height: "100vh",
-      }}
-    >
-      <div
-        style={{
-          backgroundImage: `url('${backgroundImage}')`,
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          opacity: 0.2,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 1,
-        }}
-      ></div>
-
-      <div
-        style={{
-          background: "#ffffff",
-          padding: 30,
-          borderRadius: 10,
-          width: 510,
-          position: "relative",
-          zIndex: 2,
-        }}
-        className="shadow-xl"
-      >
-        <Outlet />
+    <div className="min-h-screen w-full flex">
+      <div className="w-1/2 flex items-center justify-center bg-gradient-to-br from-[#f4f8ff] via-white to-[#e9f3ff]">
+        <img src={logo} alt="carplace24 logo" className="h-20 md:h-40" />
+      </div>
+      <div className="w-1/2 bg-white shadow-2xl flex items-center justify-center px-8 py-10">
+        <div className="w-full max-w-[510px]">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
