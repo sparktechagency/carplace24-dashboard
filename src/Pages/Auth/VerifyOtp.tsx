@@ -83,7 +83,7 @@ const VerifyOtp = () => {
               borderRadius: "8px",
               margin: "16px",
               fontSize: "20px",
-              border: "1px solid #8b0000",
+              border: "1px solid #2044AF",
               color: "#2B2A2A",
               outline: "none",
               marginBottom: 10,
@@ -113,7 +113,7 @@ const VerifyOtp = () => {
               border: "1px solid #d9d9d9",
               outline: "none",
               boxShadow: "none",
-              background: "#8b0000",
+              background: "#2044AF",
               color: "white",
             }}
           >

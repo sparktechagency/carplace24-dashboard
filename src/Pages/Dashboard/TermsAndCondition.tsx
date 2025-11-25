@@ -1,11 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import JoditEditor from "jodit-react";
 import Title from "../../components/common/Title";
-import {
-  useTermsAndConditionQuery,
-  useUpdateTermsAndConditionsMutation,
-} from "../../redux/apiSlices/termsAndConditionSlice";
-import toast from "react-hot-toast";
 import rentMeLogo from "../../assets/navLogo.png";
 
 const TermsAndCondition = () => {
@@ -22,7 +17,7 @@ const TermsAndCondition = () => {
 
   // const [updateTermsAndConditions] = useUpdateTermsAndConditionsMutation();
 
-  const termsAndCondition = [];
+  // const termsAndCondition = [];
 
   if (isLoading) {
     return (
@@ -32,23 +27,23 @@ const TermsAndCondition = () => {
     );
   }
 
-  const termsAndConditionData = termsAndCondition?.content;
+  // const termsAndConditionData = termsAndCondition?.content;
 
   const termsDataSave = async () => {
     const data = {
       content: content,
-      userType: selectedTab,
     };
+    console.log(data);
 
     try {
-      const res = await updateTermsAndConditions(data).unwrap();
-      if (res.success) {
-        toast.success("Terms and Conditions updated successfully");
-        setContent(res.data.content);
-        refetch();
-      } else {
-        toast.error("Something went wrong");
-      }
+      // const res = await updateTermsAndConditions(data).unwrap();
+      // if (res.success) {
+      //   toast.success("Terms and Conditions updated successfully");
+      //   setContent(res.data.content);
+      //   refetch();
+      // } else {
+      //   toast.error("Something went wrong");
+      // }
     } catch {
       throw new Error("Something Is wrong at try");
     }

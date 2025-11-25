@@ -20,8 +20,8 @@ const dummyData: UserData[] = [
     userId: "USR001",
     name: "John Doe",
     email: "john.doe@example.com",
+    role: "Private Seller",
     phone: "+123456789",
-    role: "Dealer",
     status: "Active",
     joinDate: "2023-05-10",
   },
@@ -30,15 +30,15 @@ const dummyData: UserData[] = [
     userId: "USR002",
     name: "Jane Smith",
     email: "jane.smith@example.com",
+    role: "Private Seller",
     phone: "+987654321",
-    role: "Dealer",
     status: "Active",
     joinDate: "2023-03-15",
   },
   // Additional dummy data...
 ];
 
-const Dealers: React.FC = () => {
+const PrivateSeller: React.FC = () => {
   const [users, setUsers] = useState<UserData[]>(dummyData);
   const [searchText, setSearchText] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
@@ -118,7 +118,7 @@ const Dealers: React.FC = () => {
   return (
     <div className="p-6 bg-white rounded-2xl">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Dealers List</h1>
+        <h1 className="text-2xl font-semibold">Private Seller List</h1>
         <div>
           <div className="flex items-center gap-3">
             {/* Search Input */}
@@ -153,4 +153,4 @@ const Dealers: React.FC = () => {
   );
 };
 
-export default Dealers;
+export default PrivateSeller;

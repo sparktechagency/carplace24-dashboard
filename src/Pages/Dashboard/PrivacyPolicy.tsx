@@ -41,6 +41,8 @@ const PrivacyPolicy = () => {
       userType: selectedTab,
     };
 
+    console.log(data);
+
     try {
       // const res = await updatePricyPolicy(data).unwrap();
       // if (res.success) {

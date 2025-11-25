@@ -130,3 +130,23 @@
 .ant-switch-checked {
   background-color: #2044af !important;
 }
+
+/* compact table rows for VehicleList */
+.vehicle-list-table .ant-table-cell {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+.vehicle-list-table .ant-table-thead > tr > th {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* compact table rows for Subscribers */
+.subscribers-table .ant-table-cell {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+.subscribers-table .ant-table-thead > tr > th {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}

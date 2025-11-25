@@ -30,11 +30,11 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = (): void => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("refreshToken");
-    sessionStorage.removeItem("authToken");
-    sessionStorage.removeItem("refreshToken");
-    Cookies.remove("refreshToken");
+    localStorage.removeItem("carPlaceAdminToken");
+    localStorage.removeItem("carPlaceAdminRefreshToken");
+    sessionStorage.removeItem("carPlaceAdminToken");
+    sessionStorage.removeItem("carPlaceAdminRefreshToken");
+    Cookies.remove("carPlaceAdminRefreshToken");
     navigate("/auth/login");
   };
 
@@ -79,11 +79,11 @@ const Sidebar = () => {
       icon: <SiMaterialdesignicons size={24} />,
       label: <Link to="/subscriptions">Subscriptions</Link>,
     },
-    {
-      key: "/promotion",
-      icon: <SiMaterialdesignicons size={24} />,
-      label: <Link to="/promotion">Promotion</Link>,
-    },
+    // {
+    //   key: "/promotion",
+    //   icon: <SiSupabase size={24} />,
+    //   label: <Link to="/promotion">Promotion</Link>,
+    // },
     {
       key: "subMenuSetting",
       icon: <IoSettingsOutline size={24} />,
@@ -108,14 +108,14 @@ const Sidebar = () => {
             </Link>
           ),
         },
-        {
-          key: "/admin-panel",
-          label: (
-            <Link to="/admin-panel" className="text-white hover:text-white">
-              Admin Panel
-            </Link>
-          ),
-        },
+        // {
+        //   key: "/admin-panel",
+        //   label: (
+        //     <Link to="/admin-panel" className="text-white hover:text-white">
+        //       Admin Panel
+        //     </Link>
+        //   ),
+        // },
 
         {
           key: "/about-us",

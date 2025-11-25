@@ -18,13 +18,13 @@ import Faq from "../Pages/Dashboard/Faq";
 import AboutUs from "../components/ui/Settings/AboutUs";
 import OfferList from "../components/ui/Settings/OfferList";
 import Orders from "../Pages/Dashboard/Orders";
-import QuoteHistory from "../Pages/Dashboard/QuoteHistory";
-import QuoteUpdate from "../Pages/Dashboard/QuoteUpdate";
-import RawMaterial from "../Pages/Dashboard/RawMaterial";
-import StandardRecipe from "../Pages/Dashboard/StandardRecipe";
-import SingleQuoteUpdate from "../Pages/Dashboard/SingleQuoteUpdate";
-import SingleQuoteHistory from "../Pages/Dashboard/SingleQuoteHistory";
 import Dealers from "@/Pages/Dashboard/Dealers";
+import PrivateSeller from "@/Pages/Dashboard/PrivateSeller";
+import VehicleList from "@/Pages/Dashboard/VehicleList";
+import VehicleDetailsPage from "@/Pages/Dashboard/vehicleDetails/VehicleDetailsPage";
+import Subscribers from "@/Pages/Dashboard/Subscribers";
+import Promotion from "@/Pages/Dashboard/Promotion";
+import Subscriptions from "@/Pages/Dashboard/Subscriptions";
 
 const router = createBrowserRouter([
   {
@@ -53,30 +53,29 @@ const router = createBrowserRouter([
         element: <Dealers />,
       },
       {
-        path: "/quote-history",
-        element: <QuoteHistory />,
+        path: "/private-seller-list",
+        element: <PrivateSeller />,
       },
       {
-        path: "/quote-history/:id",
-        element: <SingleQuoteHistory />,
+        path: "/vehicle-list",
+        element: <VehicleList />,
       },
       {
-        path: "/quote-details/:id",
-        element: <SingleQuoteUpdate />,
+        path: "/vehicle-details/:id",
+        element: <VehicleDetailsPage />,
       },
       {
-        path: "/quote-update",
-        element: <QuoteUpdate />,
+        path: "/subscribers",
+        element: <Subscribers />,
       },
       {
-        path: "/raw-material",
-        element: <RawMaterial />,
+        path: "/subscriptions",
+        element: <Subscriptions />,
       },
       {
-        path: "/standard-recipe",
-        element: <StandardRecipe />,
+        path: "/promotion",
+        element: <Promotion />,
       },
-
       {
         path: "/personal-information",
         element: <UserProfile />,

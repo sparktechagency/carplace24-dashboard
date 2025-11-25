@@ -14,11 +14,11 @@ const baseQueryWithReauth: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   const baseQuery = fetchBaseQuery({
-    baseUrl: "http://10.10.7.72:5000/api/v1",
+    // baseUrl: "http://10.10.7.72:5000/api/v1",
     prepareHeaders: (headers) => {
       const token =
-        localStorage.getItem("authToken") ||
-        sessionStorage.getItem("authToken");
+        localStorage.getItem("ca") ||
+        sessionStorage.getItem("carPlaceAdminToken");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
@@ -26,13 +26,13 @@ const baseQueryWithReauth: BaseQueryFn<
     },
   });
 
-  const refreshToken = Cookies.get("refreshToken");
+  const refreshToken = Cookies.get("carPlaceAdminRefreshToken");
 
   // Make the original request
   let result = await baseQuery(args, api, extraOptions);
 
   // Log the result to debug
-  console.log("API request result:", result);
+  // console.log("API request result:", result);
 
   // If the access token is expired, handle token refresh
   if (result.error) {
@@ -56,9 +56,9 @@ const baseQueryWithReauth: BaseQueryFn<
         "data" in refreshResult.data
       ) {
         // Save the new access token to localStorage
-        localStorage.removeItem("authToken");
+        localStorage.removeItem("carPlaceAdminToken");
         localStorage.setItem(
-          "authToken",
+          "carPlaceAdminToken",
           (refreshResult.data as any).data.accessToken
         );
 
@@ -67,10 +67,10 @@ const baseQueryWithReauth: BaseQueryFn<
       } else {
         // Refresh token failed or expired, log out the user
         console.error("Refresh token invalid or expired. Logging out...");
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("refreshToken");
-        sessionStorage.removeItem("authToken");
-        sessionStorage.removeItem("refreshToken");
+        localStorage.removeItem("carPlaceAdminToken");
+        localStorage.removeItem("carPlaceAdminRefreshToken");
+        sessionStorage.removeItem("carPlaceAdminToken");
+        sessionStorage.removeItem("carPlaceAdminRefreshToken");
         toast("Access token has expired, Please login again.");
         window.location.replace("/auth/login");
       }
@@ -102,4 +102,4 @@ export const api = createApi({
 });
 
 // Export the image URL as a constant
-export const imageUrl = "http://10.10.7.72:5000/api/v1";
+// export const imageUrl = "http://10.10.7.72:5000/api/v1";

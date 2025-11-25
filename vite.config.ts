@@ -9,6 +9,7 @@ export default defineConfig({
       "@": resolve(__dirname, "src"),
     },
   },
+  envPrefix: ["VITE_", "GOOGLE_"],
   server: {
     // host: "192.168.10.20",
     // port: 3003,

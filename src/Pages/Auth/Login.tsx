@@ -11,13 +11,6 @@ interface LoginFormValues {
   rememberMe?: boolean;
 }
 
-interface LoginResponse {
-  data?: {
-    accessToken: string;
-    refreshToken: string;
-  };
-}
-
 interface CheckboxChangeEvent {
   target: {
     checked: boolean;
@@ -29,29 +22,51 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [login] = useLoginMutation();
 
+  const getErrorMessage = (err: any): string => {
+    if (!err) return "An error occurred";
+    if (typeof err === "string") return err;
+    const data = err?.data;
+    if (typeof data === "string") return data;
+    if (data && typeof data === "object") {
+      if (data?.message) return data.message as string;
+      if (
+        Array.isArray(data?.errorMessages) &&
+        data.errorMessages[0]?.message
+      ) {
+        return data.errorMessages[0].message as string;
+      }
+    }
+    if (err?.message) return err.message as string;
+    return "An error occurred";
+  };
+
   const onFinish = async (values: LoginFormValues): Promise<void> => {
     try {
-      console.log(values);
       const res = await login(values).unwrap();
+      console.log(res);
       if (res?.success) {
         const { accessToken } = res?.data || {};
         const { refreshToken } = res?.data || {};
         if (rememberMe) {
-          localStorage.setItem("authToken", accessToken || "");
-          localStorage.setItem("refreshToken", refreshToken || "");
-          Cookies.set("refreshToken", refreshToken || "");
+          localStorage.setItem("carPlaceAdminToken", accessToken || "");
+          localStorage.setItem("carPlaceAdminRefreshToken", refreshToken || "");
+          Cookies.set("carPlaceAdminRefreshToken", refreshToken || "");
         } else {
-          sessionStorage.setItem("authToken", accessToken || "");
-          localStorage.setItem("refreshToken", refreshToken || "");
-          Cookies.set("refreshToken", refreshToken || "");
+          sessionStorage.setItem("carPlaceAdminToken", accessToken || "");
+          sessionStorage.setItem(
+            "carPlaceAdminRefreshToken",
+            refreshToken || ""
+          );
+          Cookies.set("carPlaceAdminRefreshToken", refreshToken || "");
         }
         navigate("/");
-        toast.success(res?.message || "Login successful!");
+        toast.success(res?.message);
       } else {
         toast.error(res?.message || "Login failed!");
       }
     } catch (error: any) {
-      toast.error(error?.data?.message || "An error occurred", {
+      const msg = getErrorMessage(error);
+      toast.error(msg, {
         style: {
           fontSize: "18px",
           padding: "20px",

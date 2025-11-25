@@ -3,22 +3,12 @@ import { FaRegBell } from "react-icons/fa6";
 import { Badge } from "antd";
 import logo from "../../assets/randomProfile2.jpg";
 import { useFetchAdminProfileQuery } from "../../redux/apiSlices/authSlice";
+// import { imageUrl } from "@/redux/api/baseApi";
 
-interface UserData {
-  name?: string;
-  role?: string;
-  profileImg?: string;
-}
-
-interface AdminProfileResponse {
-  data?: UserData;
-}
+const imageUrl = "http://10.10.7.72:5000/api/v1";
 
 const Header = () => {
-  const { data: userData, isLoading } = useFetchAdminProfileQuery() as {
-    data?: AdminProfileResponse;
-    isLoading: boolean;
-  };
+  const { data: userData, isLoading } = useFetchAdminProfileQuery();
 
   if (isLoading) {
     return (
@@ -44,10 +34,10 @@ const Header = () => {
             height: 45,
           }}
           src={
-            userData?.data?.profileImg
-              ? `${(import.meta as any).env.VITE_BASE_URL}${
-                  userData?.data?.profileImg
-                }`
+            userData?.data?.profile
+              ? userData?.data?.profile?.startsWith("http")
+                ? userData?.data?.profile
+                : `${imageUrl}/${userData?.data?.profileImg}`
               : logo
           }
           alt="person-male--v2"
