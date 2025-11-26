@@ -11,69 +11,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  {
-    month: "Jan",
-    privateSeller: 3200,
-    dealer: 4100,
-  },
-  {
-    month: "Feb",
-    privateSeller: 2800,
-    dealer: 3600,
-  },
-  {
-    month: "Mar",
-    privateSeller: 3500,
-    dealer: 4200,
-  },
-  {
-    month: "Apr",
-    privateSeller: 3100,
-    dealer: 3900,
-  },
-  {
-    month: "May",
-    privateSeller: 2900,
-    dealer: 3700,
-  },
-  {
-    month: "Jun",
-    privateSeller: 3300,
-    dealer: 4100,
-  },
-  {
-    month: "Jul",
-    privateSeller: 3600,
-    dealer: 4400,
-  },
-  {
-    month: "Aug",
-    privateSeller: 3800,
-    dealer: 4600,
-  },
-  {
-    month: "Sep",
-    privateSeller: 3700,
-    dealer: 4500,
-  },
-  {
-    month: "Oct",
-    privateSeller: 4000,
-    dealer: 4800,
-  },
-  {
-    month: "Nov",
-    privateSeller: 4200,
-    dealer: 5000,
-  },
-  {
-    month: "Dec",
-    privateSeller: 4500,
-    dealer: 5300,
-  },
-];
-
 const SalesTrackingChart = () => {
   const { data: earningStates, isFetching } = useRevenueStatsQuery({});
 

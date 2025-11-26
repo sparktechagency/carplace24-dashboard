@@ -65,6 +65,11 @@ const Sidebar = () => {
       label: <Link to="/private-seller-list">Private Seller List</Link>,
     },
     {
+      key: "/manage-brand-and-model",
+      icon: <FaHistory size={24} />,
+      label: <Link to="/manage-brand-and-model">Brand and Model</Link>,
+    },
+    {
       key: "/vehicle-list",
       icon: <FaHistory size={24} />,
       label: <Link to="/vehicle-list">Vehicle List</Link>,

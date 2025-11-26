@@ -1,102 +1,106 @@
 import React, { useState } from "react";
-import { Table, Button, Select, Input } from "antd";
+import { Table, Button, Select, Input, Spin } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-
-interface UserData {
-  key: string;
-  userId: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  status: string;
-  joinDate: string;
-}
-
-const dummyData: UserData[] = [
-  {
-    key: "1",
-    userId: "USR001",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "Private Seller",
-    phone: "+123456789",
-    status: "Active",
-    joinDate: "2023-05-10",
-  },
-  {
-    key: "2",
-    userId: "USR002",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    role: "Private Seller",
-    phone: "+987654321",
-    status: "Active",
-    joinDate: "2023-03-15",
-  },
-  // Additional dummy data...
-];
+import { useSellersQuery } from "@/redux/apiSlices/userSlice";
+import moment from "moment";
 
 const PrivateSeller: React.FC = () => {
-  const [users, setUsers] = useState<UserData[]>(dummyData);
+  const [users, setUsers] = useState<any[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
 
-  console.log(searchText, statusFilter);
+  const { data: getAllSellers, isFetching } = useSellersQuery({});
 
-  const columns: ColumnsType<UserData> = [
+  if (isFetching) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin />
+      </div>
+    );
+  }
+
+  const allSellers = getAllSellers?.data?.users || [];
+
+  const filteredSellers = allSellers?.filter((seller: any) => {
+    const nameMatch = seller?.name
+      ?.toLowerCase()
+      ?.includes(searchText.toLowerCase());
+    const emailMatch = seller?.email
+      ?.toLowerCase()
+      ?.includes(searchText.toLowerCase());
+    const phoneMatch = seller?.phone
+      ?.toLowerCase()
+      ?.includes(searchText.toLowerCase());
+    const roleMatch = seller?.role
+      ?.toLowerCase()
+      ?.includes(searchText.toLowerCase());
+    const statusMatch = seller?.status
+      ?.toLowerCase()
+      ?.includes(statusFilter.toLowerCase());
+
+    return nameMatch || emailMatch || phoneMatch || roleMatch || statusMatch;
+  });
+
+  const columns: ColumnsType<any> = [
     {
-      title: "User ID",
-      dataIndex: "userId",
-      key: "userId",
+      title: "Serial",
+      dataIndex: "serial",
+      key: "serial",
+      render: (_: any, __: any, index: number) => index + 1,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      render: (name: string) => name || "-",
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      render: (email: string) => email || "-",
     },
     {
       title: "Phone",
       dataIndex: "phone",
       key: "phone",
+      render: (phone: string) => phone || "-",
     },
     {
       title: "Role",
       dataIndex: "role",
       key: "role",
+      render: (role: string) => role || "-",
     },
     {
       title: "Join Date",
       dataIndex: "joinDate",
       key: "joinDate",
+      render: (joinDate: string) =>
+        moment(joinDate).format("YYYY-MM-DD") || "-",
     },
 
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status: string) => (
+      render: (_: string, record) => (
         <span
           className={`px-2 py-1 text-xs rounded-full ${
-            status === "Active"
-              ? "bg-green-200 text-green-800"
-              : "bg-red-200 text-red-800"
+            record?.isLocked
+              ? "bg-red-200 text-red-800"
+              : "bg-green-200 text-green-800"
           }`}
         >
-          {status}
+          {record?.isLocked ? "Locked" : "Active"}
         </span>
       ),
     },
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: UserData) => (
+      render: (_: any, record: any) => (
         <div className="flex gap-2">
           <Button
             type="link"
@@ -145,7 +149,7 @@ const PrivateSeller: React.FC = () => {
 
       <Table
         columns={columns}
-        dataSource={users}
+        dataSource={filteredSellers}
         rowKey="key"
         pagination={{ pageSize: 10 }}
       />

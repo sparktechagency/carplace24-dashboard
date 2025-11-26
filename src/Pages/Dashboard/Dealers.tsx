@@ -1,14 +1,39 @@
 import React, { useState } from "react";
-import { Table, Button, Select, Input } from "antd";
+import { Table, Button, Select, Input, Spin } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
+import { useDealersQuery } from "@/redux/apiSlices/userSlice";
 
 const Dealers: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
 
-  console.log(searchText, statusFilter);
+  const { data: dealersData, isFetching } = useDealersQuery({});
+
+  if (isFetching) {
+    return (
+      <div className="flex justify-center items-center">
+        <Spin />
+      </div>
+    );
+  }
+
+  const allDealers = dealersData?.data?.users || [];
+
+  const filteredDealers = allDealers?.filter((dealer: any) => {
+    const nameMatch = dealer.name
+      ?.toLowerCase()
+      .includes(searchText.toLowerCase());
+    const emailMatch = dealer.email
+      ?.toLowerCase()
+      .includes(searchText.toLowerCase());
+    const phoneMatch = dealer.phone?.includes(searchText);
+    const roleMatch = dealer.role
+      ?.toLowerCase()
+      .includes(statusFilter.toLowerCase());
+    return nameMatch || emailMatch || phoneMatch || roleMatch;
+  });
 
   const columns: ColumnsType<any> = [
     {
@@ -110,7 +135,7 @@ const Dealers: React.FC = () => {
 
       <Table
         columns={columns}
-        dataSource={users}
+        dataSource={filteredDealers}
         rowKey="key"
         pagination={{ pageSize: 10 }}
       />

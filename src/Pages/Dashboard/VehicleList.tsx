@@ -1,223 +1,10 @@
-import { Input, Select, Table, Tag, Tooltip } from "antd";
+import { Input, Select, Spin, Table, Tag, Tooltip } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { RiEyeLine } from "react-icons/ri";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-interface Vehicle {
-  id: string;
-  name: string;
-  brand: string;
-  model: string;
-  price: number;
-  listingDate: string;
-  uploadedBy: string;
-  status: "Active" | "Pending" | "Sold";
-}
-
-const dataSource: Vehicle[] = [
-  {
-    id: "V-1001",
-    name: "Audi A4",
-    brand: "Audi",
-    model: "A4",
-    price: 27500,
-    listingDate: "2025-01-05",
-    uploadedBy: "John Doe",
-    status: "Active",
-  },
-  {
-    id: "V-1002",
-    name: "BMW 320i",
-    brand: "BMW",
-    model: "320i",
-    price: 31500,
-    listingDate: "2025-01-12",
-    uploadedBy: "Anna Smith",
-    status: "Pending",
-  },
-  {
-    id: "V-1003",
-    name: "Mercedes C200",
-    brand: "Mercedes",
-    model: "C200",
-    price: 39900,
-    listingDate: "2025-01-16",
-    uploadedBy: "Carl Zeiss",
-    status: "Active",
-  },
-  {
-    id: "V-1004",
-    name: "Volkswagen Golf",
-    brand: "Volkswagen",
-    model: "Golf",
-    price: 18950,
-    listingDate: "2024-12-29",
-    uploadedBy: "Elena Novak",
-    status: "Sold",
-  },
-  {
-    id: "V-1005",
-    name: "Toyota Corolla",
-    brand: "Toyota",
-    model: "Corolla",
-    price: 16500,
-    listingDate: "2025-01-20",
-    uploadedBy: "Marco Rossi",
-    status: "Active",
-  },
-  {
-    id: "V-1006",
-    name: "Honda Civic",
-    brand: "Honda",
-    model: "Civic",
-    price: 17200,
-    listingDate: "2025-01-22",
-    uploadedBy: "Sara Lee",
-    status: "Pending",
-  },
-  {
-    id: "V-1007",
-    name: "Porsche 911",
-    brand: "Porsche",
-    model: "911",
-    price: 115000,
-    listingDate: "2025-01-02",
-    uploadedBy: "James Bond",
-    status: "Active",
-  },
-  {
-    id: "V-1008",
-    name: "Kia Sportage",
-    brand: "Kia",
-    model: "Sportage",
-    price: 23500,
-    listingDate: "2024-12-20",
-    uploadedBy: "Nora White",
-    status: "Sold",
-  },
-  {
-    id: "V-1009",
-    name: "Hyundai Ioniq",
-    brand: "Hyundai",
-    model: "Ioniq",
-    price: 28900,
-    listingDate: "2025-01-10",
-    uploadedBy: "Liam Müller",
-    status: "Pending",
-  },
-  {
-    id: "V-1010",
-    name: "Tesla Model 3",
-    brand: "Tesla",
-    model: "Model 3",
-    price: 39990,
-    listingDate: "2025-01-24",
-    uploadedBy: "Ada Lovelace",
-    status: "Active",
-  },
-  {
-    id: "V-1011",
-    name: "Ford Mustang",
-    brand: "Ford",
-    model: "Mustang",
-    price: 42000,
-    listingDate: "2025-01-25",
-    uploadedBy: "Jack Ryan",
-    status: "Active",
-  },
-  {
-    id: "V-1012",
-    name: "Chevrolet Camaro",
-    brand: "Chevrolet",
-    model: "Camaro",
-    price: 38000,
-    listingDate: "2025-01-26",
-    uploadedBy: "Emily Clark",
-    status: "Pending",
-  },
-  {
-    id: "V-1013",
-    name: "Nissan Qashqai",
-    brand: "Nissan",
-    model: "Qashqai",
-    price: 24500,
-    listingDate: "2025-01-27",
-    uploadedBy: "Oliver Queen",
-    status: "Active",
-  },
-  {
-    id: "V-1014",
-    name: "Mazda CX-5",
-    brand: "Mazda",
-    model: "CX-5",
-    price: 31000,
-    listingDate: "2025-01-28",
-    uploadedBy: "Sophie Turner",
-    status: "Sold",
-  },
-  {
-    id: "V-1015",
-    name: "Subaru Outback",
-    brand: "Subaru",
-    model: "Outback",
-    price: 33500,
-    listingDate: "2025-01-29",
-    uploadedBy: "Daniel Craig",
-    status: "Pending",
-  },
-  {
-    id: "V-1016",
-    name: "Volvo XC60",
-    brand: "Volvo",
-    model: "XC60",
-    price: 48500,
-    listingDate: "2025-01-30",
-    uploadedBy: "Emma Watson",
-    status: "Active",
-  },
-  {
-    id: "V-1017",
-    name: "Jaguar XE",
-    brand: "Jaguar",
-    model: "XE",
-    price: 52000,
-    listingDate: "2025-01-31",
-    uploadedBy: "Harry Styles",
-    status: "Sold",
-  },
-  {
-    id: "V-1018",
-    name: "Land Rover Discovery",
-    brand: "Land Rover",
-    model: "Discovery",
-    price: 68000,
-    listingDate: "2025-02-01",
-    uploadedBy: "Isla Fisher",
-    status: "Pending",
-  },
-  {
-    id: "V-1019",
-    name: "Peugeot 308",
-    brand: "Peugeot",
-    model: "308",
-    price: 22000,
-    listingDate: "2025-02-02",
-    uploadedBy: "Luke Evans",
-    status: "Active",
-  },
-  {
-    id: "V-1020",
-    name: "Renault Clio",
-    brand: "Renault",
-    model: "Clio",
-    price: 17500,
-    listingDate: "2025-02-03",
-    uploadedBy: "Zoe Saldana",
-    status: "Active",
-  },
-];
+import { useCarsQuery } from "@/redux/apiSlices/carSlice";
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat("en-CH", {
@@ -226,7 +13,7 @@ const formatPrice = (value: number) =>
     maximumFractionDigits: 0,
   }).format(value);
 
-const statusColor = (status: Vehicle["status"]) => {
+const statusColor = (status: any) => {
   switch (status) {
     case "Active":
       return "green";
@@ -244,9 +31,30 @@ const VehicleList = () => {
   const [brandFilter, setBrandFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
-  console.log(searchText, brandFilter, statusFilter);
+  const { data: getALlCars, isFetching } = useCarsQuery({});
 
-  const columns: ColumnsType<Vehicle> = [
+  if (isFetching) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin />
+      </div>
+    );
+  }
+
+  const allCarsData = getALlCars?.data || [];
+
+  const filteredCars = allCarsData?.filter((car: any) => {
+    const nameMatch = car?.vehicleName
+      ?.toLowerCase()
+      .includes(searchText.toLowerCase());
+    const brandMatch = car?.brand
+      ?.toLowerCase()
+      ?.includes(brandFilter.toLowerCase());
+    const statusMatch = car.status === statusFilter || !statusFilter;
+    return nameMatch || brandMatch || statusMatch;
+  });
+
+  const columns: ColumnsType<any> = [
     {
       title: "Serial",
       key: "serial",
@@ -256,42 +64,41 @@ const VehicleList = () => {
     },
     {
       title: "Vehicle Name",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: ["basicInformation", "vehicleName"],
+      key: "vehicleName",
     },
     {
       title: "Brand",
-      dataIndex: "brand",
+      dataIndex: ["basicInformation", "brand", "brand"],
       key: "brand",
     },
     {
       title: "Model",
-      dataIndex: "model",
+      dataIndex: ["basicInformation", "model", "model"],
       key: "model",
     },
     {
       title: "Price",
-      dataIndex: "price",
+      dataIndex: ["basicInformation", "OfferPrice"],
       key: "price",
       render: (value: number) => formatPrice(value),
     },
     {
       title: "Listing Date",
-      dataIndex: "listingDate",
-      key: "listingDate",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (value: string) => new Date(value).toLocaleDateString(),
     },
     {
       title: "Uploaded By",
-      dataIndex: "uploadedBy",
+      dataIndex: ["createdBy", "name"],
       key: "uploadedBy",
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (value: Vehicle["status"]) => (
-        <Tag color={statusColor(value)}>{value}</Tag>
-      ),
+      render: (value: any) => <Tag color={statusColor(value)}>{value}</Tag>,
     },
     {
       title: "Action",
@@ -299,10 +106,12 @@ const VehicleList = () => {
       align: "center",
       render: (_, record) => (
         <Tooltip title="View">
-          <Link to={`/vehicle-details/${record.id}`}>
+          <Link to={`/vehicle-details/${record._id}`}>
             <button
               className="p-2 rounded hover:bg-gray-100"
-              onClick={() => toast(`Viewing ${record.name}`)}
+              onClick={() =>
+                toast(`Viewing ${record?.basicInformation?.vehicleName}`)
+              }
             >
               <RiEyeLine size={18} />
             </button>
@@ -359,9 +168,9 @@ const VehicleList = () => {
         </div>
       </div>
       <Table
-        rowKey={(row) => row.id}
+        rowKey="_id"
         columns={columns}
-        dataSource={dataSource}
+        dataSource={filteredCars}
         pagination={{ pageSize: 15 }}
         size="small"
       />

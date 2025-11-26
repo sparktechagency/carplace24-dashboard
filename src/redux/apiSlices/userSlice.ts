@@ -29,6 +29,15 @@ const userSlice = api.injectEndpoints({
       },
     }),
 
+    sellers: builder.query({
+      query: () => {
+        return {
+          method: "GET",
+          url: "/admin/user-list?role=SELLER",
+        };
+      },
+    }),
+
     userById: builder.query({
       query: (id) => {
         return {
@@ -44,5 +53,6 @@ export const {
   useAdminQuery,
   useUsersQuery,
   useDealersQuery,
+  useSellersQuery,
   useUserByIdQuery,
 } = userSlice;

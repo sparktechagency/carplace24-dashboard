@@ -10,21 +10,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { name: "Jan", subscriptions: 600 },
-  { name: "Feb", subscriptions: 950 },
-  { name: "Mar", subscriptions: 800 },
-  { name: "Apr", subscriptions: 1150 },
-  { name: "May", subscriptions: 1600 },
-  { name: "Jun", subscriptions: 1150 },
-  { name: "Jul", subscriptions: 1900 },
-  { name: "Aug", subscriptions: 2100 },
-  { name: "Sep", subscriptions: 1850 },
-  { name: "Oct", subscriptions: 2200 },
-  { name: "Nov", subscriptions: 2050 },
-  { name: "Dec", subscriptions: 2300 },
-];
-
 const SubscriptionStatistics = () => {
   const { data: subscriptionStates, isFetching } = useTotalSubscribersQuery({});
 

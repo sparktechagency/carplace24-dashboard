@@ -25,6 +25,7 @@ import VehicleDetailsPage from "@/Pages/Dashboard/vehicleDetails/VehicleDetailsP
 import Subscribers from "@/Pages/Dashboard/Subscribers";
 import Promotion from "@/Pages/Dashboard/Promotion";
 import Subscriptions from "@/Pages/Dashboard/Subscriptions";
+import BrandAndModel from "@/Pages/Dashboard/BrandAndModel";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "/private-seller-list",
         element: <PrivateSeller />,
+      },
+      {
+        path: "/manage-brand-and-model",
+        element: <BrandAndModel />,
       },
       {
         path: "/vehicle-list",
