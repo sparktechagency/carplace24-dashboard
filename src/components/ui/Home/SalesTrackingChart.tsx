@@ -1,3 +1,5 @@
+import { useRevenueStatsQuery } from "@/redux/apiSlices/dashboardSlice";
+import { Spin } from "antd";
 import {
   BarChart,
   Bar,
@@ -73,6 +75,18 @@ const data = [
 ];
 
 const SalesTrackingChart = () => {
+  const { data: earningStates, isFetching } = useRevenueStatsQuery({});
+
+  if (isFetching) {
+    return (
+      <div className="flex items-center justify-center">
+        <Spin />
+      </div>
+    );
+  }
+
+  const earningStats = earningStates?.data || [];
+
   return (
     <div className="px-5 bg-white rounded-2xl py-3">
       <h1 className="text-xl my-5 font-semibold">Earning Statistics</h1>
@@ -80,7 +94,7 @@ const SalesTrackingChart = () => {
         <BarChart
           width={500}
           height={300}
-          data={data}
+          data={earningStats}
           margin={{
             top: 5,
             right: 30,
@@ -94,13 +108,13 @@ const SalesTrackingChart = () => {
           <Tooltip />
           <Legend />
           <Bar
-            dataKey="privateSeller"
+            dataKey="privateSellerRevenue"
             fill="#6DBD44"
             barSize={20}
             radius={[20, 20, 0, 0]}
           />
           <Bar
-            dataKey="dealer"
+            dataKey="dealerRevenue"
             fill="#007AFF"
             barSize={20}
             radius={[20, 20, 0, 0]}

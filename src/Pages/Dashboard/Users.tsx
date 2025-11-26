@@ -1,81 +1,75 @@
 import React, { useState } from "react";
-import { Table, Button, Select, Input } from "antd";
+import { Table, Button, Select, Input, Spin } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-
-interface UserData {
-  key: string;
-  userId: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  status: string;
-  joinDate: string;
-}
-
-const dummyData: UserData[] = [
-  {
-    key: "1",
-    userId: "USR001",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+123456789",
-    role: "Private Seller",
-    status: "Active",
-    joinDate: "2023-05-10",
-  },
-  {
-    key: "2",
-    userId: "USR002",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    phone: "+987654321",
-    role: "Dealer",
-    status: "Active",
-    joinDate: "2023-03-15",
-  },
-  {
-    key: "3",
-    userId: "USR0023",
-    name: "Jack Smith",
-    email: "jack.smith@example.com",
-    phone: "+987654321",
-    role: "Buyer",
-    status: "Active",
-    joinDate: "2023-03-15",
-  },
-  // Additional dummy data...
-];
+import { useUsersQuery } from "@/redux/apiSlices/userSlice";
+import moment from "moment";
 
 const Users: React.FC = () => {
-  const [users, setUsers] = useState<UserData[]>(dummyData);
   const [searchText, setSearchText] = useState<string>("");
   const [roleFilter, setRoleFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+
+  const { data: usersList, isFetching } = useUsersQuery({});
+
+  if (isFetching) {
+    return (
+      <div className="flex items-center justify-center">
+        <Spin />
+      </div>
+    );
+  }
 
   console.log(searchText, roleFilter, statusFilter);
 
-  const columns: ColumnsType<UserData> = [
+  const allUsersList = usersList?.data?.users || [];
+
+  const filteredUsersList = allUsersList?.filter((user: any) => {
+    const q = searchText.trim().toLowerCase();
+    const name = (user?.name || "").toLowerCase();
+    const email = (user?.email || "").toLowerCase();
+    const phone = (user?.phone || "").toLowerCase();
+    const textMatch =
+      !q || name.includes(q) || email.includes(q) || phone.includes(q);
+    const roleMatch = !roleFilter || user?.role === roleFilter;
+    const statusMatch =
+      !statusFilter ||
+      (statusFilter === "Active"
+        ? user?.isLocked === false
+        : user?.isLocked === true);
+    return textMatch && roleMatch && statusMatch;
+  });
+
+  const handleDelete = (userId: string) => {
+    console.log("delete user", userId);
+  };
+
+  const columns: ColumnsType<any> = [
     {
-      title: "User ID",
-      dataIndex: "userId",
-      key: "userId",
+      title: "Serial",
+      dataIndex: "key",
+      key: "key",
+      render: (...args: any[]) => args[2] + 1,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      render: (_: string, record: any) => record.name || "-",
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      render: (_: string, record: any) => record.email || "-",
     },
     {
       title: "Phone",
       dataIndex: "phone",
       key: "phone",
+      render: (_: string, record: any) => record.phone || "-",
     },
     {
       title: "Role",
@@ -86,34 +80,37 @@ const Users: React.FC = () => {
       title: "Join Date",
       dataIndex: "joinDate",
       key: "joinDate",
+      render: (_: string, record: any) =>
+        moment(record?.joinDate || record?.createdAt).format("YYYY-MM-DD") ||
+        "-",
     },
 
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status: string) => (
+      render: (_, record: any) => (
         <span
           className={`px-2 py-1 text-xs rounded-full ${
-            status === "Active"
-              ? "bg-green-200 text-green-800"
-              : "bg-red-200 text-red-800"
+            record.isLocked
+              ? "bg-red-200 text-red-800"
+              : "bg-green-200 text-green-800"
           }`}
         >
-          {status}
+          {record.isLocked ? "Locked" : "Active"}
         </span>
       ),
     },
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: UserData) => (
+      render: (_: any, record: any) => (
         <div className="flex gap-2">
           <Button
             type="link"
             danger
             icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.key)}
+            onClick={() => handleDelete(record._id)}
           >
             Delete
           </Button>
@@ -121,10 +118,6 @@ const Users: React.FC = () => {
       ),
     },
   ];
-
-  const handleDelete = (key: string): void => {
-    setUsers(users.filter((user) => user.key !== key));
-  };
 
   return (
     <div className="p-6 bg-white rounded-2xl">
@@ -147,11 +140,9 @@ const Users: React.FC = () => {
               onChange={(value) => setRoleFilter(value)}
               style={{ width: 150 }}
             >
-              <Select.Option value="Private Seller">
-                Private Seller
-              </Select.Option>
-              <Select.Option value="Dealer">Dealer</Select.Option>
-              <Select.Option value="Buyer">Buyer</Select.Option>
+              <Select.Option value="SELLER">Private Seller</Select.Option>
+              <Select.Option value="DEALER">Dealer</Select.Option>
+              <Select.Option value="BUYER">Buyer</Select.Option>
             </Select>
 
             {/* Status Filter Dropdown */}
@@ -170,9 +161,17 @@ const Users: React.FC = () => {
 
       <Table
         columns={columns}
-        dataSource={users}
-        rowKey="key"
-        pagination={{ pageSize: 10 }}
+        dataSource={filteredUsersList}
+        rowKey={(row) => row._id || row.key || row.id}
+        pagination={{
+          current: page,
+          pageSize: limit,
+          total: usersList?.data?.meta?.total || filteredUsersList.length,
+          onChange: (p, ps) => {
+            setPage(p);
+            setLimit(ps || 10);
+          },
+        }}
       />
     </div>
   );

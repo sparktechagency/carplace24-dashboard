@@ -66,7 +66,7 @@
 }
 
 .ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
-  color: white !important;
+  color: black !important;
 }
 
 .ant-menu .ant-menu-item .ant-menu-item-icon + span {
@@ -74,7 +74,7 @@
 }
 
 .ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
-  color: white !important;
+  color: black !important;
 }
 
 .ant-menu .ant-menu-title-content {

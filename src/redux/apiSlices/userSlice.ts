@@ -10,22 +10,25 @@ const userSlice = api.injectEndpoints({
         };
       },
     }),
+
     users: builder.query({
       query: () => {
         return {
           method: "GET",
-          url: "/user",
+          url: `/admin/user-list`,
         };
       },
     }),
-    vendors: builder.query({
+
+    dealers: builder.query({
       query: () => {
         return {
           method: "GET",
-          url: "/user?role=VENDOR",
+          url: "/admin/user-list?role=DEALER",
         };
       },
     }),
+
     userById: builder.query({
       query: (id) => {
         return {
@@ -40,6 +43,6 @@ const userSlice = api.injectEndpoints({
 export const {
   useAdminQuery,
   useUsersQuery,
-  useVendorsQuery,
+  useDealersQuery,
   useUserByIdQuery,
 } = userSlice;

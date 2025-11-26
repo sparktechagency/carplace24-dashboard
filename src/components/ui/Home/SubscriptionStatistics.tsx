@@ -1,3 +1,5 @@
+import { useTotalSubscribersQuery } from "@/redux/apiSlices/dashboardSlice";
+import { Spin } from "antd";
 import {
   AreaChart,
   Area,
@@ -24,6 +26,18 @@ const data = [
 ];
 
 const SubscriptionStatistics = () => {
+  const { data: subscriptionStates, isFetching } = useTotalSubscribersQuery({});
+
+  if (isFetching) {
+    return (
+      <div className="flex items-center justify-center">
+        <Spin />
+      </div>
+    );
+  }
+
+  const subscriptionStats = subscriptionStates?.data || [];
+
   return (
     <div
       style={{ width: "100%", height: 350 }}
@@ -35,7 +49,7 @@ const SubscriptionStatistics = () => {
 
       <ResponsiveContainer width="100%" height={250}>
         <AreaChart
-          data={data}
+          data={subscriptionStats}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
           <defs>
@@ -45,12 +59,12 @@ const SubscriptionStatistics = () => {
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="month" />
           <YAxis />
           <Tooltip />
           <Area
             type="monotone"
-            dataKey="subscriptions"
+            dataKey="totalSubscribers"
             stroke="#007AFF"
             fill="url(#colorUv)"
           />

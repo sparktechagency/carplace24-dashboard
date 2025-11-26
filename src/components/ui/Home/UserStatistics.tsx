@@ -1,3 +1,5 @@
+import { useUserStatisticsQuery } from "@/redux/apiSlices/dashboardSlice";
+import { Spin } from "antd";
 import {
   LineChart,
   Line,
@@ -24,6 +26,18 @@ const data = [
 ];
 
 const UserStatistics = () => {
+  const { data: userStatistics, isFetching } = useUserStatisticsQuery({});
+
+  if (isFetching) {
+    return (
+      <div className="flex items-center justify-center">
+        <Spin />
+      </div>
+    );
+  }
+
+  const userStats = userStatistics?.data || [];
+
   return (
     <div
       style={{ width: "100%", height: 350 }}
@@ -32,26 +46,26 @@ const UserStatistics = () => {
       <h4 className="mb-5 text-xl font-semibold mt-4">User Statistics</h4>
 
       <ResponsiveContainer width="100%" height={250}>
-        <LineChart data={data} syncId="anyId">
+        <LineChart data={userStats} syncId="anyId">
           <CartesianGrid />
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
           <Line
             type="monotone"
-            dataKey="user"
+            dataKey="dealer"
             stroke="#00D307"
             fill="#C4A862"
           />
           <Line
             type="monotone"
-            dataKey="private seller"
+            dataKey="allUsers"
             stroke="#FF9F40"
             fill="#FFC371"
           />
           <Line
             type="monotone"
-            dataKey="dealer"
+            dataKey="privateSeller"
             stroke="#007BFF"
             fill="#A8D4FF"
           />

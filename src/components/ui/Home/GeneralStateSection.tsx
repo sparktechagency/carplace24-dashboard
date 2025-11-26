@@ -1,29 +1,19 @@
 import { FaUsers } from "react-icons/fa6";
-import salongoLogo from "../../../assets/salon-go-logo.png";
+import { useGeneralStatsQuery } from "@/redux/apiSlices/dashboardSlice";
+import { Spin } from "antd";
 
 const GeneralStateSection = () => {
-  // Simulated dummy data
-  const generalState = {
-    data: {
-      totalActiveUsers: 1500,
-      newSignups: 120,
-      totalActiveVendors: 45,
-      totalCompletedOrders: 320567,
-      totalServices: 75,
-    },
-  };
+  const { data: generalStates, isFetching } = useGeneralStatsQuery({});
 
-  const isLoading = false; // Simulated loading state
-
-  if (isLoading) {
+  if (isFetching) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={salongoLogo} alt="" />
+        <Spin />
       </div>
     );
   }
 
-  const state = generalState?.data;
+  const state = generalStates?.data;
 
   return (
     <div className="grid md:grid-cols-4 gap-6 md:h-[90px]">
@@ -34,7 +24,7 @@ const GeneralStateSection = () => {
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">Total User</h2>
           <h3 className="text-center text-2xl font-semibold">
-            {state?.totalActiveUsers}
+            {state?.totalUser !== undefined ? state.totalUser : "N/A"}
           </h3>
         </div>
       </div>
@@ -45,7 +35,7 @@ const GeneralStateSection = () => {
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">Total Dealer</h2>
           <h3 className="text-center text-2xl font-semibold">
-            {state?.newSignups}
+            {state?.totalDealers !== undefined ? state.totalDealers : "N/A"}
           </h3>
         </div>
       </div>
@@ -58,7 +48,9 @@ const GeneralStateSection = () => {
             Total Private Seller
           </h2>
           <h3 className="text-center text-2xl font-semibold">
-            {state?.totalActiveVendors}
+            {state?.totalprivateSeller !== undefined
+              ? state.totalprivateSeller
+              : "N/A"}
           </h3>
         </div>
       </div>
@@ -69,10 +61,21 @@ const GeneralStateSection = () => {
         <div className="flex flex-col items-start">
           <h2 className="text-center text-2xl text-base">Total Earning</h2>
           <h3 className="text-center text-2xl font-semibold">
-            ${state?.totalCompletedOrders}
+            ${state?.totalIncome !== undefined ? state.totalIncome : "N/A"}
           </h3>
         </div>
       </div>
+      {/* <div className="bg-white rounded-2xl py-0 px-6 flex items-center justify-start gap-4">
+        <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
+          <FaUsers color="#210630" size={24} />
+        </div>
+        <div className="flex flex-col items-start">
+          <h2 className="text-center text-2xl text-base">Total Revenue</h2>
+          <h3 className="text-center text-2xl font-semibold">
+            ${state?.totalRevenue !== undefined ? state.totalRevenue : "N/A"}
+          </h3>
+        </div>
+      </div> */}
     </div>
   );
 };

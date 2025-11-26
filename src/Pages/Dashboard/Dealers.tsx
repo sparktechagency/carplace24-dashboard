@@ -3,49 +3,14 @@ import { Table, Button, Select, Input } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 
-interface UserData {
-  key: string;
-  userId: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  status: string;
-  joinDate: string;
-}
-
-const dummyData: UserData[] = [
-  {
-    key: "1",
-    userId: "USR001",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+123456789",
-    role: "Dealer",
-    status: "Active",
-    joinDate: "2023-05-10",
-  },
-  {
-    key: "2",
-    userId: "USR002",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    phone: "+987654321",
-    role: "Dealer",
-    status: "Active",
-    joinDate: "2023-03-15",
-  },
-  // Additional dummy data...
-];
-
 const Dealers: React.FC = () => {
-  const [users, setUsers] = useState<UserData[]>(dummyData);
+  const [users, setUsers] = useState<any[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
 
   console.log(searchText, statusFilter);
 
-  const columns: ColumnsType<UserData> = [
+  const columns: ColumnsType<any> = [
     {
       title: "User ID",
       dataIndex: "userId",
@@ -96,7 +61,7 @@ const Dealers: React.FC = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: UserData) => (
+      render: (_: any, record: any) => (
         <div className="flex gap-2">
           <Button
             type="link"
