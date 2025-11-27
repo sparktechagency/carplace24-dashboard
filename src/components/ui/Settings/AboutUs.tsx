@@ -1,41 +1,44 @@
 import { useState, useRef } from "react";
 import JoditEditor from "jodit-react";
 import toast from "react-hot-toast";
-import logo from "../../../assets/logo.png";
-
-interface PrivacyPolicyData {
-  content?: string;
-}
+import Title from "@/components/common/Title";
+import {
+  useGetAboutUsQuery,
+  useUpdateAboutUsMutation,
+} from "@/redux/apiSlices/publicSlice";
+import { Spin } from "antd";
 
 const AboutUs = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
-  const [selectedTab] = useState("about");
 
-  const isLoading = false;
+  const { data: getAboutData, isLoading } = useGetAboutUsQuery({});
+  const [updateAboutUs, { isLoading: isUpdating }] = useUpdateAboutUsMutation();
 
-  if (isLoading) {
+  if (isLoading || isUpdating) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={logo} alt="Loading" />
+        <Spin />
       </div>
     );
   }
 
-  const privacyPolicy: PrivacyPolicyData[] = [];
-  const privacyPolicyData = privacyPolicy?.[0]?.content || "";
+  const aboutUsData = getAboutData?.data?.content || "";
+  console.log(aboutUsData);
 
   const termsDataSave = async () => {
     const data = {
       content: content,
-      userType: selectedTab,
     };
 
     try {
-      // Simulate API call - replace with actual implementation when API is ready
-      console.log("Saving data:", data);
-      toast.success("About Us updated successfully");
-      setContent(data.content);
+      const res = await updateAboutUs(data);
+      if (res?.data?.success) {
+        toast.success(res?.data?.message || "About Us updated successfully");
+        setContent(data.content);
+      } else {
+        toast.error(res?.data?.message || "Update failed. Please try again.");
+      }
     } catch (error) {
       console.error("Update failed:", error);
       toast.error("Update failed. Please try again.");
@@ -44,11 +47,11 @@ const AboutUs = () => {
 
   return (
     <div className="p-6 bg-white">
-      <h1 className="text-2xl font-semibold">About Us</h1>
+      <Title className="mb-4">About Us</Title>
 
       <JoditEditor
         ref={editor}
-        value={privacyPolicyData}
+        value={aboutUsData}
         onChange={(newContent) => {
           setContent(newContent);
         }}

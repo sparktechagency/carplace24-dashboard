@@ -2,47 +2,38 @@ import { useState } from "react";
 import { Button, Table } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import FaqModal from "../../components/ui/FAQ/FaqModal";
-
-interface FaqData {
-  key: string;
-  question: string;
-  answer: string;
-}
+import toast from "react-hot-toast";
+import {
+  useGetFaqQuery,
+  useCreateFaqMutation,
+  useUpdateFaqMutation,
+  useDeleteFaqMutation,
+} from "@/redux/apiSlices/publicSlice";
 
 const Faq = () => {
   const [openAddModel, setOpenAddModel] = useState(false);
-  const [modalData, setModalData] = useState<FaqData | null>(null);
+  const [modalData, setModalData] = useState<any | null>(null);
 
-  // Dummy data for FAQs
-  const faqData: FaqData[] = [
-    {
-      key: "1",
-      question: "How do I create an account?",
-      answer:
-        "To create an account, click on the 'Sign Up' button and fill in your details.",
-    },
-    {
-      key: "2",
-      question: "How can I reset my password?",
-      answer:
-        "You can reset your password by clicking 'Forgot Password' on the login page.",
-    },
-    {
-      key: "3",
-      question: "How do I contact support?",
-      answer:
-        "You can contact our support team through the contact form or email us directly.",
-    },
-  ];
+  const { data: faqRes, isFetching, refetch } = useGetFaqQuery({});
+  const [createFaq] = useCreateFaqMutation();
+  const [updateFaq] = useUpdateFaqMutation();
+  const [deleteFaq] = useDeleteFaqMutation();
 
-  const handleEdit = (record: FaqData) => {
+  const faqData = faqRes?.data || [];
+
+  const handleEdit = (record: any) => {
     setModalData(record);
     setOpenAddModel(true);
   };
 
-  const handleDelete = (key: string) => {
-    console.log("Delete FAQ with key:", key);
-    // Add delete logic here
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteFaq(id).unwrap();
+      toast.success("FAQ deleted");
+      refetch();
+    } catch (e) {
+      toast.error("Delete failed");
+    }
   };
 
   const columns = [
@@ -63,7 +54,7 @@ const Faq = () => {
       title: "Actions",
       key: "actions",
       width: "10%",
-      render: (_: any, record: FaqData) => (
+      render: (_: any, record: any) => (
         <div className="flex gap-2">
           <Button
             type="primary"
@@ -76,7 +67,7 @@ const Faq = () => {
             danger
             icon={<DeleteOutlined />}
             size="small"
-            onClick={() => handleDelete(record.key)}
+            onClick={() => handleDelete(record?._id || record?.key)}
           />
         </div>
       ),
@@ -84,7 +75,7 @@ const Faq = () => {
   ];
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white rounded-2xl">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">FAQ Management</h1>
         <Button
@@ -103,10 +94,10 @@ const Faq = () => {
         <Table
           columns={columns}
           dataSource={faqData}
+          rowKey={(row) => row._id || row.key}
+          loading={isFetching}
           pagination={{
             pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
           }}
         />
       </div>
@@ -116,6 +107,21 @@ const Faq = () => {
         setOpenAddModel={setOpenAddModel}
         modalData={modalData}
         setModalData={setModalData}
+        onSubmit={async (values) => {
+          try {
+            if (modalData?._id) {
+              await updateFaq({ _id: modalData._id, ...values }).unwrap();
+              toast.success("FAQ updated");
+            } else {
+              await createFaq(values).unwrap();
+              toast.success("FAQ added");
+            }
+            refetch();
+          } catch (e) {
+            toast.error("Save failed");
+            throw e;
+          }
+        }}
       />
     </div>
   );

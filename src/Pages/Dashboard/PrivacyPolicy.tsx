@@ -1,57 +1,45 @@
 import { useState, useRef } from "react";
 import JoditEditor from "jodit-react";
-import rentMeLogo from "../../assets/navLogo.png";
 import toast from "react-hot-toast";
+import Title from "@/components/common/Title";
+import {
+  useGetPrivacyPolicyQuery,
+  useUpdatePrivacyPolicyMutation,
+} from "@/redux/apiSlices/publicSlice";
 
-interface PrivacyPolicyData {
-  content: string;
-  userType: string;
-}
+import { Spin } from "antd";
 
 const PrivacyPolicy = () => {
   const editor = useRef<any>(null);
   const [content, setContent] = useState<string>("");
-  const selectedTab = "user"; // Add default value
 
-  const isLoading = false;
+  const { data: getPrivacyPolicy, isLoading } = useGetPrivacyPolicyQuery({});
+  const [updatePrivacyPolicy, { isLoading: isUpdating }] =
+    useUpdatePrivacyPolicyMutation();
 
-  // const {
-  //   data: privacyPolicy,
-  //   isLoading,
-  //   refetch,
-  // } = usePrivacyPolicyQuery(selectedTab);
-
-  // const [updatePricyPolicy] = useUpdatePricyPolicyMutation();
-
-  if (isLoading) {
+  if (isLoading || isUpdating) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={rentMeLogo} alt="" />
+        <Spin />
       </div>
     );
   }
 
-  const privacyPolicy: { content?: string } = {};
-
-  const privacyPolicyData = privacyPolicy?.content || "";
+  const privacyPolicyData = getPrivacyPolicy?.data?.content || "";
 
   const termsDataSave = async () => {
-    const data: PrivacyPolicyData = {
+    const data = {
       content: content,
-      userType: selectedTab,
     };
 
-    console.log(data);
-
     try {
-      // const res = await updatePricyPolicy(data).unwrap();
-      // if (res.success) {
-      //   toast.success("Privacy Policy updated successfully");
-      //   setContent(res.data.content);
-      //   refetch();
-      // } else {
-      //   toast.error("Something went wrong");
-      // }
+      const res = await updatePrivacyPolicy(data).unwrap();
+      if (res.success) {
+        toast.success(res?.message || "Privacy Policy updated successfully");
+        setContent(res.data.content);
+      } else {
+        toast.error(res?.message || "Something went wrong");
+      }
     } catch (error) {
       console.error("Update failed:", error);
       toast.error("Update failed. Please try again.");
@@ -60,7 +48,7 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="p-6 bg-white">
-      <h1 className="text-2xl font-semibold">App Support</h1>
+      <Title className="mb-4">Privacy Policy</Title>
 
       <JoditEditor
         ref={editor}

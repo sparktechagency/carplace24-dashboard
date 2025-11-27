@@ -1,11 +1,8 @@
 import { Link } from "react-router-dom";
 import { FaRegBell } from "react-icons/fa6";
 import { Badge } from "antd";
-import logo from "../../assets/randomProfile2.jpg";
 import { useFetchAdminProfileQuery } from "../../redux/apiSlices/authSlice";
-// import { imageUrl } from "@/redux/api/baseApi";
-
-const imageUrl = "http://10.10.7.72:5000/api/v1";
+import { getImageUrl } from "@/utils/getImageUrl";
 
 const Header = () => {
   const { data: userData, isLoading } = useFetchAdminProfileQuery();
@@ -33,15 +30,9 @@ const Header = () => {
             width: 45,
             height: 45,
           }}
-          src={
-            userData?.data?.profile
-              ? userData?.data?.profile?.startsWith("http")
-                ? userData?.data?.profile
-                : `${imageUrl}/${userData?.data?.profileImg}`
-              : logo
-          }
+          src={getImageUrl(userData?.data?.profile)}
           alt="person-male--v2"
-          className="clip"
+          className="object-cover"
         />
         <div className="flex pr-2 flex-col">
           <p className="text-xl">{userData?.data?.name || "Unknown Admin"}</p>

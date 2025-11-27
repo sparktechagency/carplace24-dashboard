@@ -20,9 +20,9 @@ interface ResetPasswordData {
 }
 
 interface ChangePasswordData {
-  current_password: string;
-  new_password: string;
-  confirm_password: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
 }
 
 interface UpdateProfileData {
@@ -107,20 +107,6 @@ const authSlice = api.injectEndpoints({
       },
       invalidatesTags: ["AdminData"],
     }),
-    updateAdminProfile: builder.mutation<any, UpdateProfileData>({
-      query: (data) => {
-        const token = localStorage.getItem("token");
-        return {
-          method: "PATCH",
-          url: "/admin/profile",
-          body: data,
-          headers: {
-            Authorization: token ? `Bearer ${JSON.parse(token)}` : "",
-          },
-        };
-      },
-      invalidatesTags: ["AdminData"],
-    }),
 
     profile: builder.query<any, void>({
       query: () => {
@@ -146,6 +132,18 @@ const authSlice = api.injectEndpoints({
           url: "/user/profile",
         };
       },
+      providesTags: ["AdminData"],
+    }),
+
+    updateAdminProfile: builder.mutation({
+      query: (data) => {
+        return {
+          method: "PATCH",
+          url: "/user",
+          body: data,
+        };
+      },
+      invalidatesTags: ["AdminData"],
     }),
   }),
 });

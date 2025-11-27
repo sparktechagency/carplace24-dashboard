@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import { Table, Button, Select, Input, Spin } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  LockOutlined,
+  UnlockOutlined,
+} from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { useUsersQuery } from "@/redux/apiSlices/userSlice";
+import {
+  useUpdateUserStatusMutation,
+  useUsersQuery,
+} from "@/redux/apiSlices/userSlice";
 import moment from "moment";
+import toast from "react-hot-toast";
 
 const Users: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
@@ -13,6 +21,7 @@ const Users: React.FC = () => {
   const [limit, setLimit] = useState<number>(10);
 
   const { data: usersList, isFetching } = useUsersQuery({});
+  const [updateUserStatus] = useUpdateUserStatusMutation();
 
   if (isFetching) {
     return (
@@ -44,6 +53,19 @@ const Users: React.FC = () => {
 
   const handleDelete = (userId: string) => {
     console.log("delete user", userId);
+  };
+
+  const handleUpdateUserStatus = async (userId: string) => {
+    try {
+      const res = await updateUserStatus({ id: userId });
+      if (res?.data?.success) {
+        toast.success(res?.data?.message || "User status updated successfully");
+      } else {
+        toast.error(res?.data?.message || "Failed to update user status");
+      }
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to update user status");
+    }
   };
 
   const columns: ColumnsType<any> = [
@@ -108,12 +130,20 @@ const Users: React.FC = () => {
         <div className="flex gap-2">
           <Button
             type="link"
-            danger
+            className={`${
+              record.isLocked
+                ? "bg-green-200 text-green-800"
+                : "bg-red-200 text-red-800"
+            }`}
+            icon={record.isLocked ? <UnlockOutlined /> : <LockOutlined />}
+            onClick={() => handleUpdateUserStatus(record._id)}
+          ></Button>
+          <Button
+            type="link"
+            className="bg-red-200 text-red-800"
             icon={<DeleteOutlined />}
             onClick={() => handleDelete(record._id)}
-          >
-            Delete
-          </Button>
+          ></Button>
         </div>
       ),
     },

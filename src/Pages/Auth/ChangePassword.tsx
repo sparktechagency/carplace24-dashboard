@@ -1,6 +1,5 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Spin } from "antd";
 import { useState } from "react";
-import rentMeLogo from "../../assets/navLogo.png";
 
 import toast from "react-hot-toast";
 import { useChangePasswordMutation } from "@/redux/apiSlices/authSlice";
@@ -33,7 +32,7 @@ const ChangePassword = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={rentMeLogo} alt="" />
+        <Spin />
       </div>
     );
   }
@@ -61,18 +60,23 @@ const ChangePassword = () => {
     if (Object.keys(errors).length === 0) {
       try {
         const res = (await changePassword({
-          current_password: values.currentPassword,
-          new_password: values.newPassword,
-          confirm_password: values.confirmPassword,
+          currentPassword: values.currentPassword,
+          newPassword: values.newPassword,
+          confirmPassword: values.confirmPassword,
         }).unwrap()) as ApiResponse; // Use `.unwrap()` to get the resolved value or error
         if (res.success) {
           toast.success("Password changed successfully");
+          form.resetFields();
+          setErrorMessages({ newPassError: "", conPassError: "" });
         } else {
-          toast.error("Password change failed");
+          toast.error(res?.message || "Password change failed");
         }
-      } catch (err) {
-        console.error("Error changing password:", err);
-        toast.error("An error occurred while changing the password");
+      } catch (err: any) {
+        const message =
+          err?.data?.message ||
+          err?.message ||
+          "An error occurred while changing the password";
+        toast.error(message);
       }
     }
   };
@@ -160,9 +164,11 @@ const ChangePassword = () => {
               height: 48,
               fontWeight: "400px",
               background: "#6DBD44",
-              color: "black",
+              color: "white",
             }}
             className="roboto-medium text-sm leading-4"
+            loading={isLoading}
+            disabled={isLoading}
           >
             Submit
           </Button>

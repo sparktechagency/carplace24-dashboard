@@ -1,42 +1,24 @@
 import { useState, useEffect } from "react";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Spin } from "antd";
 import { BiLeftArrowAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import logo from "../../../assets/randomProfile2.jpg";
-import rentMeLogo from "../../../assets/navLogo.png";
-
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
-interface FormValues {
-  name: string;
-  email: string;
-  address: string;
-  phone: string;
-}
-
-interface AdminData {
-  name: string;
-  email: string;
-  address: string;
-  contact: string;
-  profileImg: string;
-}
+import { imageUrl } from "@/redux/api/baseApi";
+import {
+  useFetchAdminProfileQuery,
+  useUpdateAdminProfileMutation,
+} from "@/redux/apiSlices/authSlice";
+import toast from "react-hot-toast";
 
 const PersonalInfo = () => {
-  const [contact, setContact] = useState<string>("");
   const [imgURL, setImgURL] = useState<string | undefined>();
   const [file, setFile] = useState<File | null>(null);
   const [form] = Form.useForm();
 
-  const isLoading = false;
-
-  // const { data: fetchAdminProfile, isLoading } = useFetchAdminProfileQuery();
-  // const [updateAdminProfile] = useUpdateAdminProfileMutation();
-
-  const fetchAdminProfile: { data?: AdminData } = {};
+  const { data: fetchAdminProfile, isLoading } = useFetchAdminProfileQuery();
+  const [updateAdminProfile] = useUpdateAdminProfileMutation();
 
   const adminData = fetchAdminProfile?.data;
 
@@ -46,17 +28,16 @@ const PersonalInfo = () => {
         name: adminData?.name,
         email: adminData?.email,
         address: adminData?.address,
-        phone: adminData?.contact,
+        mobileNumber: adminData?.mobileNumber,
       });
-      setImgURL(`${baseUrl}${adminData?.profileImg}`);
-      setContact(adminData?.contact);
+      setImgURL(`${imageUrl}${adminData?.profile}`);
     }
   }, [form, adminData]);
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={rentMeLogo} alt="" />
+        <Spin />
       </div>
     );
   }
@@ -70,13 +51,13 @@ const PersonalInfo = () => {
     }
   };
 
-  const onFinish = async (values: FormValues) => {
+  const onFinish = async (values: any) => {
     try {
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("email", values.email);
       formData.append("address", values.address);
-      formData.append("contact", contact);
+      formData.append("mobileNumber", values.mobileNumber);
 
       if (file) {
         formData.append("image", file);
@@ -84,13 +65,15 @@ const PersonalInfo = () => {
         formData.append("imageUrl", imgURL || "");
       }
 
-      // const response = await updateAdminProfile(formData);
+      const response = await updateAdminProfile(formData);
 
-      // if (response.data) {
-      //   toast.success(response?.data?.message);
-      // } else {
-      //   toast.error(response?.data?.message);
-      // }
+      if (response.data) {
+        toast.success(
+          response?.data?.message || "Profile updated successfully"
+        );
+      } else {
+        toast.error(response?.data?.message || "Failed to update profile");
+      }
     } catch (error) {
       console.error("Error updating form:", error);
     }
@@ -141,21 +124,14 @@ const PersonalInfo = () => {
             >
               <Input className="py-3 bg-gray-100 rounded-xl" />
             </Form.Item>
-
             <Form.Item
-              label="Phone"
-              name="phone"
+              name="mobileNumber"
+              label="Contact"
               rules={[
-                { required: true, message: "Please enter your phone number" },
+                { required: true, message: "Please enter your Mobile Number" },
               ]}
             >
-              <PhoneInput
-                country="us"
-                value={contact}
-                onChange={setContact}
-                inputClass="!w-full !px-4 !py-3 !py-5 !ps-12 !border !border-gray-300 !rounded-lg !focus:outline-none !focus:ring-2 !focus:ring-blue-400"
-                containerClass="!w-full"
-              />
+              <Input className="py-3 bg-gray-100 rounded-xl" />
             </Form.Item>
 
             <Form.Item>
@@ -167,7 +143,7 @@ const PersonalInfo = () => {
                   height: 48,
                   fontWeight: "400px",
                   background: "#6DBD44",
-                  color: "black",
+                  color: "white",
                 }}
                 className="roboto-medium mt-10 text-sm leading-4"
               >

@@ -18,6 +18,7 @@ const userSlice = api.injectEndpoints({
           url: `/admin/user-list`,
         };
       },
+      providesTags: ["Users"],
     }),
 
     dealers: builder.query({
@@ -46,6 +47,16 @@ const userSlice = api.injectEndpoints({
         };
       },
     }),
+
+    updateUserStatus: builder.mutation({
+      query: ({ id }) => {
+        return {
+          method: "PATCH",
+          url: `/user/toggle-user-lock/${id}`,
+        };
+      },
+      invalidatesTags: ["Users"],
+    }),
   }),
 });
 
@@ -55,4 +66,5 @@ export const {
   useDealersQuery,
   useSellersQuery,
   useUserByIdQuery,
+  useUpdateUserStatusMutation,
 } = userSlice;

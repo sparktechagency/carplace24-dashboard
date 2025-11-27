@@ -12,6 +12,7 @@ interface FaqModalProps {
   modalData: FaqData | null;
   openAddModel: boolean;
   setOpenAddModel: (open: boolean) => void;
+  onSubmit: (values: FormValues) => Promise<void> | void;
 }
 
 interface FormValues {
@@ -24,6 +25,7 @@ const FaqModal = ({
   modalData,
   openAddModel,
   setOpenAddModel,
+  onSubmit,
 }: FaqModalProps) => {
   const [form] = Form.useForm<FormValues>();
 
@@ -36,8 +38,11 @@ const FaqModal = ({
     }
   }, [modalData, form]);
 
-  const onFinish = (values: FormValues) => {
-    console.log(values);
+  const onFinish = async (values: FormValues) => {
+    await onSubmit(values);
+    setOpenAddModel(false);
+    setModalData(null);
+    form.resetFields();
   };
 
   return (

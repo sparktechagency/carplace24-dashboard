@@ -1,33 +1,31 @@
 import { useState, useRef } from "react";
 import JoditEditor from "jodit-react";
 import Title from "../../components/common/Title";
-import rentMeLogo from "../../assets/navLogo.png";
+import {
+  useGetTermsAndConditionsQuery,
+  useUpdateTermsAndConditionsMutation,
+} from "@/redux/apiSlices/publicSlice";
+import toast from "react-hot-toast";
+import { Spin } from "antd";
 
 const TermsAndCondition = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
 
-  const isLoading = false;
-
-  // const {
-  //   data: termsAndCondition,
-  //   isLoading,
-  //   refetch,
-  // } = useTermsAndConditionQuery(selectedTab);
-
-  // const [updateTermsAndConditions] = useUpdateTermsAndConditionsMutation();
-
-  // const termsAndCondition = [];
-
-  if (isLoading) {
+  const { data: termsAndCondition, isLoading } = useGetTermsAndConditionsQuery(
+    {}
+  );
+  const [updateTermsAndConditions, { isLoading: isUpdating }] =
+    useUpdateTermsAndConditionsMutation();
+  if (isLoading || isUpdating) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <img src={rentMeLogo} alt="" />
+        <Spin />
       </div>
     );
   }
 
-  // const termsAndConditionData = termsAndCondition?.content;
+  const termsAndConditionData = termsAndCondition?.data?.content || "";
 
   const termsDataSave = async () => {
     const data = {
@@ -36,14 +34,15 @@ const TermsAndCondition = () => {
     console.log(data);
 
     try {
-      // const res = await updateTermsAndConditions(data).unwrap();
-      // if (res.success) {
-      //   toast.success("Terms and Conditions updated successfully");
-      //   setContent(res.data.content);
-      //   refetch();
-      // } else {
-      //   toast.error("Something went wrong");
-      // }
+      const res = await updateTermsAndConditions(data).unwrap();
+      if (res.success) {
+        toast.success(
+          res?.message || "Terms and Conditions updated successfully"
+        );
+        setContent(res.data.content);
+      } else {
+        toast.error(res?.message || "Something went wrong");
+      }
     } catch {
       throw new Error("Something Is wrong at try");
     }
@@ -55,7 +54,7 @@ const TermsAndCondition = () => {
 
       <JoditEditor
         ref={editor}
-        value={content}
+        value={termsAndConditionData}
         onChange={(newContent) => {
           setContent(newContent);
         }}

@@ -145,7 +145,7 @@ const Sidebar = () => {
           key: "/privacy-policy",
           label: (
             <Link to="/privacy-policy" className="text-white hover:text-white">
-              App Support
+              Privacy Policy
             </Link>
           ),
         },
