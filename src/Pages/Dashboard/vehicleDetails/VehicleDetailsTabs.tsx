@@ -3,7 +3,27 @@
 import { useState } from "react";
 import { CAR_DETAILS } from "./carData";
 
-const VehicleDetailsTabs = () => {
+type SummaryItem = { label: string; icon: any };
+type Row = { name: string; value: string };
+type Details = {
+  summary: SummaryItem[];
+  basicInformation: Row[];
+  colorInformation: Row[];
+  equipment: Row[];
+  extras: Row[];
+  technicalInformation: Row[];
+  seatsAndDoors: Row[];
+  fuelConsumption: Row[];
+  euroStandard: Row[];
+  electricHybridSpecific: Row[];
+  description: string;
+};
+
+const VehicleDetailsTabs = ({
+  details = CAR_DETAILS as any,
+}: {
+  details?: Details;
+}) => {
   const [activeTab, setActiveTab] = useState<"basic" | "hours" | "reviews">(
     "basic"
   );
@@ -54,7 +74,7 @@ const VehicleDetailsTabs = () => {
       {/* Summary icons */}
       {activeTab === "basic" && (
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {CAR_DETAILS.summary.map((item, i) => (
+          {details.summary.map((item: SummaryItem, i: number) => (
             <div key={i} className="flex items-center gap-2">
               <item.icon className="h-4 w-4 text-gray-500" />
               <span className="text-sm text-gray-700">{item.label}</span>
@@ -77,7 +97,7 @@ const VehicleDetailsTabs = () => {
                 Basic Information
               </h3>
               <div className="mt-3 text-sm">
-                {CAR_DETAILS.basicInformation.map((row, i) => (
+                {details.basicInformation.map((row: Row, i: number) => (
                   <div
                     key={i}
                     className="flex justify-between border-b pb-2 mb-2"
@@ -92,7 +112,7 @@ const VehicleDetailsTabs = () => {
                 Color Information
               </h3>
               <div className="mt-3 text-sm">
-                {CAR_DETAILS.colorInformation.map((row, i) => (
+                {details.colorInformation.map((row: Row, i: number) => (
                   <div
                     key={i}
                     className="flex justify-between border-b pb-2 mb-2"
@@ -107,7 +127,7 @@ const VehicleDetailsTabs = () => {
                 Equipment
               </h3>
               <div className="mt-3 text-sm">
-                {CAR_DETAILS.equipment.map((row, i) => (
+                {details.equipment.map((row: Row, i: number) => (
                   <div
                     key={i}
                     className="flex justify-between border-b pb-2 mb-2"
@@ -122,7 +142,7 @@ const VehicleDetailsTabs = () => {
                 Extras
               </h3>
               <div className="mt-3 text-sm">
-                {CAR_DETAILS.extras.map((row, i) => (
+                {details.extras.map((row: Row, i: number) => (
                   <div
                     key={i}
                     className="flex justify-between border-b pb-2 mb-2"
@@ -140,7 +160,7 @@ const VehicleDetailsTabs = () => {
                 Technical Information
               </h3>
               <div className="mt-3 text-sm">
-                {CAR_DETAILS.technicalInformation.map((row, i) => (
+                {details.technicalInformation.map((row: Row, i: number) => (
                   <div
                     key={i}
                     className="flex justify-between border-b pb-2 mb-2"
@@ -155,7 +175,7 @@ const VehicleDetailsTabs = () => {
                 Seats & Doors
               </h3>
               <div className="mt-3 text-sm">
-                {CAR_DETAILS.seatsAndDoors.map((row, i) => (
+                {details.seatsAndDoors.map((row: Row, i: number) => (
                   <div
                     key={i}
                     className="flex justify-between border-b pb-2 mb-2"
@@ -170,7 +190,7 @@ const VehicleDetailsTabs = () => {
                 Fuel Consumption
               </h3>
               <div className="mt-3 text-sm">
-                {CAR_DETAILS.fuelConsumption.map((row, i) => (
+                {details.fuelConsumption.map((row: Row, i: number) => (
                   <div
                     key={i}
                     className="flex justify-between border-b pb-2 mb-2"
@@ -185,7 +205,7 @@ const VehicleDetailsTabs = () => {
                 Euro Standard
               </h3>
               <div className="mt-3 text-sm">
-                {CAR_DETAILS.euroStandard.map((row, i) => (
+                {details.euroStandard.map((row: Row, i: number) => (
                   <div
                     key={i}
                     className="flex justify-between border-b pb-2 mb-2"
@@ -200,7 +220,7 @@ const VehicleDetailsTabs = () => {
                 Electric & Hybrid Specific
               </h3>
               <div className="mt-3 text-sm">
-                {CAR_DETAILS.electricHybridSpecific.map((row, i) => (
+                {details.electricHybridSpecific.map((row: Row, i: number) => (
                   <div
                     key={i}
                     className="flex justify-between border-b pb-2 mb-2"
@@ -232,7 +252,7 @@ const VehicleDetailsTabs = () => {
             Description
           </h3>
           <div className="mt-3 text-sm text-gray-700">
-            <p>{CAR_DETAILS.description}</p>
+            <p>{details.description}</p>
           </div>
         </div>
       )}

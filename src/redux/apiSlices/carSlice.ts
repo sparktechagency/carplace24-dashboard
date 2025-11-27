@@ -10,7 +10,16 @@ const carSlice = api.injectEndpoints({
         };
       },
     }),
+
+    getCarsById: builder.query({
+      query: (id) => {
+        return {
+          method: "GET",
+          url: `/car/${id}`,
+        };
+      },
+    }),
   }),
 });
 
-export const { useCarsQuery } = carSlice;
+export const { useCarsQuery, useGetCarsByIdQuery } = carSlice;
