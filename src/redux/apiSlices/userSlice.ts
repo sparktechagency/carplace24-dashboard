@@ -25,7 +25,7 @@ const userSlice = api.injectEndpoints({
       query: () => {
         return {
           method: "GET",
-          url: "/admin/user-list?role=DEALER",
+          url: "/admin/user-list?role=DELEAR",
         };
       },
     }),
