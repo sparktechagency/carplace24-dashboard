@@ -11,7 +11,7 @@ export default defineConfig({
   },
   envPrefix: ["VITE_", "GOOGLE_"],
   server: {
-    host: "10.10.7.47",
-    port: 3003,
+    host: "31.97.114.108",
+    // port: 3003,
   },
 });
