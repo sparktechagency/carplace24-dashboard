@@ -1,6 +1,7 @@
 import { Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Title from "@/components/common/Title";
+import { useGetAllSubscribersQuery } from "@/redux/apiSlices/userSlice";
 
 type PackageType = "Basic" | "Pro" | "Premium";
 type StatusType = "Active" | "Expired" | "Paused";
@@ -15,62 +16,21 @@ interface Subscriber {
   status: StatusType;
 }
 
-const dataSource: Subscriber[] = [
-  {
-    id: "S-1001",
-    name: "John Doe",
-    packageType: "Pro",
-    startDate: "2025-01-01",
-    endDate: "2025-12-31",
-    price: 299,
-    status: "Active",
-  },
-  {
-    id: "S-1002",
-    name: "Anna Smith",
-    packageType: "Premium",
-    startDate: "2024-11-10",
-    endDate: "2025-11-09",
-    price: 499,
-    status: "Active",
-  },
-  {
-    id: "S-1003",
-    name: "Marco Rossi",
-    packageType: "Basic",
-    startDate: "2024-01-15",
-    endDate: "2024-07-14",
-    price: 99,
-    status: "Expired",
-  },
-  {
-    id: "S-1004",
-    name: "Sara Lee",
-    packageType: "Pro",
-    startDate: "2025-02-01",
-    endDate: "2026-01-31",
-    price: 299,
-    status: "Paused",
-  },
-  {
-    id: "S-1005",
-    name: "James Bond",
-    packageType: "Premium",
-    startDate: "2025-01-05",
-    endDate: "2026-01-04",
-    price: 499,
-    status: "Active",
-  },
-  {
-    id: "S-1006",
-    name: "Elena Novak",
-    packageType: "Basic",
-    startDate: "2024-08-20",
-    endDate: "2025-02-19",
-    price: 99,
-    status: "Expired",
-  },
-];
+const toStatus = (val?: string): StatusType => {
+  switch ((val || "").toLowerCase()) {
+    case "active":
+      return "Active";
+    case "expired":
+      return "Expired";
+    case "paused":
+      return "Paused";
+    default:
+      return "Active";
+  }
+};
+
+const formatDateIso = (iso?: string) =>
+  iso ? new Date(iso).toISOString().split("T")[0] : "";
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat("en-CH", {
@@ -93,6 +53,19 @@ const statusColor = (status: StatusType) => {
 };
 
 const Subscribers = () => {
+  const { data: subscribersRes, isFetching } = useGetAllSubscribersQuery({});
+
+  const apiData = (subscribersRes as any)?.data || [];
+  const dataSource: Subscriber[] = apiData.map((s: any) => ({
+    id: s?._id,
+    name: s?.user?.name || s?.user?.email || "",
+    packageType: (s?.package?.title || "Basic") as PackageType,
+    startDate: formatDateIso(s?.currentPeriodStart),
+    endDate: formatDateIso(s?.currentPeriodEnd),
+    price: Number(s?.price ?? s?.package?.price ?? 0),
+    status: toStatus(s?.status),
+  }));
+
   const columns: ColumnsType<Subscriber> = [
     {
       title: "Serial",
@@ -146,6 +119,7 @@ const Subscribers = () => {
         rowKey={(row) => row.id}
         columns={columns}
         dataSource={dataSource}
+        loading={isFetching}
         pagination={{ pageSize: 10 }}
       />
     </div>

@@ -97,6 +97,9 @@ const Users: React.FC = () => {
       title: "Role",
       dataIndex: "role",
       key: "role",
+      render: (_: string, record: any) => (
+        <div>{record?.role === "DELEAR" ? "DEALER" : record?.role}</div>
+      ),
     },
     {
       title: "Join Date",
