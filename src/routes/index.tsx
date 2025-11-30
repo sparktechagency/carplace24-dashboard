@@ -26,15 +26,17 @@ import Subscribers from "@/Pages/Dashboard/Subscribers";
 import Promotion from "@/Pages/Dashboard/Promotion";
 import Subscriptions from "@/Pages/Dashboard/Subscriptions";
 import BrandAndModel from "@/Pages/Dashboard/BrandAndModel";
+import PrivateRoute from "./PrivateRoute";
+import BlogsManagement from "@/Pages/Dashboard/BlogsManagement";
 
 const router = createBrowserRouter([
   {
     path: "/",
     // element: <ProtectedRoute><Main /></ProtectedRoute> ,
     element: (
-      // <PrivateRoute>
-      <Main />
-      // </PrivateRoute>
+      <PrivateRoute>
+        <Main />
+      </PrivateRoute>
     ),
     children: [
       {
@@ -76,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: "/subscriptions",
         element: <Subscriptions />,
+      },
+      {
+        path: "/blogs",
+        element: <BlogsManagement />,
       },
       {
         path: "/promotion",

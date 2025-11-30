@@ -17,7 +17,9 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const authToken = localStorage.getItem("authToken");
+    const authToken =
+      localStorage.getItem("carPlaceAdminToken") ||
+      sessionStorage.getItem("carPlaceAdminToken");
 
     if (!authToken) {
       toast.error("You are not authorized to access this. Please login first.");
@@ -34,13 +36,16 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
         }
       } catch (error) {
         toast.error("Invalid token. Please login again.");
-        localStorage.removeItem("authToken");
+        localStorage.removeItem("carPlaceAdminToken");
+        sessionStorage.removeItem("carPlaceAdminToken");
         navigate("/auth/login", { replace: true, state: { from: location } });
       }
     }
   }, [navigate, location]);
 
-  const authToken = localStorage.getItem("authToken");
+  const authToken =
+    localStorage.getItem("carPlaceAdminToken") ||
+    sessionStorage.getItem("carPlaceAdminToken");
   if (authToken) {
     try {
       const decodedToken = jwtDecode<JwtPayload>(authToken);

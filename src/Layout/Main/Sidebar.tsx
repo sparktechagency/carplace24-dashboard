@@ -84,6 +84,11 @@ const Sidebar = () => {
       icon: <SiMaterialdesignicons size={24} />,
       label: <Link to="/subscriptions">Subscriptions</Link>,
     },
+    {
+      key: "/blogs",
+      icon: <SiMaterialdesignicons size={24} />,
+      label: <Link to="/blogs">Blogs</Link>,
+    },
     // {
     //   key: "/promotion",
     //   icon: <SiSupabase size={24} />,
