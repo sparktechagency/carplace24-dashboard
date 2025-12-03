@@ -57,15 +57,6 @@ const userSlice = api.injectEndpoints({
       },
       invalidatesTags: ["Users"],
     }),
-
-    getAllSubscribers: builder.query({
-      query: () => {
-        return {
-          method: "GET",
-          url: "/subscription/all",
-        };
-      },
-    }),
   }),
 });
 
@@ -76,5 +67,4 @@ export const {
   useSellersQuery,
   useUserByIdQuery,
   useUpdateUserStatusMutation,
-  useGetAllSubscribersQuery,
 } = userSlice;

@@ -1,7 +1,9 @@
 import { Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Title from "@/components/common/Title";
-import { useGetAllSubscribersQuery } from "@/redux/apiSlices/userSlice";
+
+import { useState } from "react";
+import { useGetAllSubscribersQuery } from "@/redux/apiSlices/subscriptionsSlice";
 
 type PackageType = "Basic" | "Pro" | "Premium";
 type StatusType = "Active" | "Expired" | "Paused";
@@ -53,10 +55,20 @@ const statusColor = (status: StatusType) => {
 };
 
 const Subscribers = () => {
-  const { data: subscribersRes, isFetching } = useGetAllSubscribersQuery({});
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
-  const apiData = (subscribersRes as any)?.data || [];
-  const dataSource: Subscriber[] = apiData.map((s: any) => ({
+  const { data: subscribersRes, isFetching } = useGetAllSubscribersQuery({
+    page,
+    limit,
+  });
+
+  const api = (subscribersRes as any)?.data || {};
+  const list = (api?.subscriptions || []) as any[];
+  const stats = (api?.stats || {}) as any;
+  const pagination = (api?.pagination || {}) as any;
+
+  const dataSource: Subscriber[] = list.map((s: any) => ({
     id: s?._id,
     name: s?.user?.name || s?.user?.email || "",
     packageType: (s?.package?.title || "Basic") as PackageType,
@@ -115,12 +127,46 @@ const Subscribers = () => {
       <div className="mb-4 flex items-center justify-between">
         <Title>Subscribers</Title>
       </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div className="border rounded-lg p-3">
+          <div className="text-xs text-gray-500">Total Subscriptions</div>
+          <div className="text-lg font-semibold">
+            {stats?.totalSubscriptions ?? 0}
+          </div>
+        </div>
+        <div className="border rounded-lg p-3">
+          <div className="text-xs text-gray-500">Active</div>
+          <div className="text-lg font-semibold">
+            {stats?.activeSubscriptions ?? 0}
+          </div>
+        </div>
+        <div className="border rounded-lg p-3">
+          <div className="text-xs text-gray-500">Base Revenue (CHF)</div>
+          <div className="text-lg font-semibold">
+            {stats?.totalBaseRevenue ?? 0}
+          </div>
+        </div>
+        <div className="border rounded-lg p-3">
+          <div className="text-xs text-gray-500">Total Revenue (CHF)</div>
+          <div className="text-lg font-semibold">
+            {stats?.totalRevenue ?? 0}
+          </div>
+        </div>
+      </div>
       <Table
         rowKey={(row) => row.id}
         columns={columns}
         dataSource={dataSource}
         loading={isFetching}
-        pagination={{ pageSize: 10 }}
+        pagination={{
+          current: Number(pagination?.page || page),
+          pageSize: Number(pagination?.limit || limit),
+          total: Number(pagination?.total || dataSource.length || 0),
+          onChange: (p, ps) => {
+            setPage(p);
+            setLimit(ps);
+          },
+        }}
       />
     </div>
   );
