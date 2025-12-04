@@ -71,6 +71,7 @@ const Subscribers = () => {
   const dataSource: Subscriber[] = list.map((s: any) => ({
     id: s?._id,
     name: s?.user?.name || s?.user?.email || "",
+    email: s?.user?.email || "",
     packageType: (s?.package?.title || "Basic") as PackageType,
     startDate: formatDateIso(s?.currentPeriodStart),
     endDate: formatDateIso(s?.currentPeriodEnd),
@@ -90,6 +91,11 @@ const Subscribers = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Package Type",
