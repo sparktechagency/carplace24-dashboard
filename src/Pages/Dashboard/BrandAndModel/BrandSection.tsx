@@ -6,7 +6,6 @@ import {
   Input,
   Modal,
   Popconfirm,
-  Select,
   Spin,
   Table,
   Upload,
@@ -21,13 +20,15 @@ import type { UploadFile } from "antd/es/upload/interface";
 import toast from "react-hot-toast";
 import {
   useGetAllBrandsQuery,
-  useGetAllModelsQuery,
   useCreateBrandMutation,
   useUpdateBrandMutation,
   useDeleteBrandMutation,
-  useCreateModelMutation,
-  useUpdateModelMutation,
-  useDeleteModelMutation,
+  useGetAllModelsQuery, // Needed to refetch models on brand delete if linked?
+  // Actually original code refetched models on brand delete: `refetchModels()`.
+  // So we need access to refetchModels or we just ignore it.
+  // Ideally deleting a brand deletes models or we cascade.
+  // The original code did `refetchModels()`.
+  // To keep exactly same behavior I might need to import it.
 } from "@/redux/apiSlices/brandAndModalSlice";
 import { getImageUrl } from "@/utils/getImageUrl";
 
@@ -37,20 +38,10 @@ type Brand = {
   logo?: string;
 };
 
-type Model = {
-  id: string;
-  title: string;
-  brandId: string;
-};
-
-const BrandAndModel = () => {
+const BrandSection = () => {
   const [brandModalOpen, setBrandModalOpen] = useState(false);
-  const [modelModalOpen, setModelModalOpen] = useState(false);
   const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
-  const [editingModel, setEditingModel] = useState<Model | null>(null);
   const [brandForm] = Form.useForm();
-  const [modelForm] = Form.useForm();
-
   const [logoFiles, setLogoFiles] = useState<UploadFile[]>([]);
   const [logoPreview, setLogoPreview] = useState<string | undefined>();
 
@@ -59,35 +50,15 @@ const BrandAndModel = () => {
     isFetching,
     refetch: refetchBrands,
   } = useGetAllBrandsQuery({});
-  const {
-    data: getAllModels,
-    isFetching: isFetchingModels,
-    refetch: refetchModels,
-  } = useGetAllModelsQuery({});
+
+  // Use this to refetch models when a brand is deleted/updated if necessary
+  const { refetch: refetchModels } = useGetAllModelsQuery({});
 
   const [createBrand] = useCreateBrandMutation();
   const [updateBrand] = useUpdateBrandMutation();
   const [deleteBrandMut] = useDeleteBrandMutation();
-  const [createModel] = useCreateModelMutation();
-  const [updateModel] = useUpdateModelMutation();
-  const [deleteModelMut] = useDeleteModelMutation();
-
-  if (isFetching || isFetchingModels) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin />
-      </div>
-    );
-  }
 
   const allBrands = getAllBrands?.data || [];
-  const allModels = getAllModels?.data || [];
-  console.log(allBrands, allModels);
-
-  const brandOptions = allBrands?.map((b: any) => ({
-    label: b?.brand,
-    value: b?._id,
-  }));
 
   const getBase64 = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -161,46 +132,6 @@ const BrandAndModel = () => {
     refetchModels();
   };
 
-  const openCreateModel = () => {
-    setEditingModel(null);
-    modelForm.resetFields();
-    setModelModalOpen(true);
-  };
-
-  const openEditModel = (record: any) => {
-    setEditingModel(record);
-    modelForm.setFieldsValue({
-      title: record?.model,
-      brandId: record?.brand?._id || record?.brand,
-    });
-    setModelModalOpen(true);
-  };
-
-  const submitModel = async () => {
-    const values = await modelForm.validateFields();
-    const payload = { model: values.title, brand: values.brandId };
-    if ((editingModel as any)?._id) {
-      await updateModel({
-        id: (editingModel as any)._id,
-        model: payload,
-      }).unwrap();
-      toast.success("Model updated");
-    } else {
-      await createModel(payload).unwrap();
-      toast.success("Model added");
-    }
-    setModelModalOpen(false);
-    setEditingModel(null);
-    modelForm.resetFields();
-    refetchModels();
-  };
-
-  const deleteModel = async (id: string) => {
-    await deleteModelMut(id).unwrap();
-    toast.success("Model deleted");
-    refetchModels();
-  };
-
   const brandColumns = [
     {
       title: "Logo",
@@ -210,12 +141,12 @@ const BrandAndModel = () => {
         image ? (
           <Image
             src={getImageUrl(image)}
-            width={44}
-            height={44}
-            className="w-11 h-11 rounded-lg"
+            width={32}
+            height={32}
+            className="w-8 h-8 rounded-lg"
           />
         ) : (
-          <div className="w-11 h-11 rounded-lg bg-gray-100" />
+          <div className="w-8 h-8 rounded-lg bg-gray-100" />
         ),
     },
     {
@@ -223,7 +154,6 @@ const BrandAndModel = () => {
       dataIndex: "brand",
       key: "brand",
     },
-
     {
       title: "Actions",
       key: "actions",
@@ -233,102 +163,42 @@ const BrandAndModel = () => {
             size="small"
             icon={<EditOutlined />}
             onClick={() => openEditBrand(record)}
-          >
-            Edit
-          </Button>
+          ></Button>
           <Popconfirm
             title="Delete brand?"
             onConfirm={() => deleteBrand((record as any)?._id)}
           >
-            <Button size="small" danger icon={<DeleteOutlined />}>
-              Delete
-            </Button>
+            <Button size="small" danger icon={<DeleteOutlined />}></Button>
           </Popconfirm>
         </div>
       ),
     },
   ];
 
-  const modelColumns = [
-    {
-      title: "Title",
-      dataIndex: "model",
-      key: "model",
-    },
-    {
-      title: "Brand",
-      dataIndex: "brand",
-      key: "brand",
-      render: (_: any, record: any) => record?.brand?.brand || "-",
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_: any, record: any) => (
-        <div className="flex gap-2">
-          <Button
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => openEditModel(record)}
-          >
-            Edit
-          </Button>
-          <Popconfirm
-            title="Delete model?"
-            onConfirm={() => deleteModel((record as any)?._id)}
-          >
-            <Button size="small" danger icon={<DeleteOutlined />}>
-              Delete
-            </Button>
-          </Popconfirm>
-        </div>
-      ),
-    },
-  ];
+  if (isFetching) {
+    return <Spin />;
+  }
 
   return (
-    <div className="p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl p-6 border">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Brands</h2>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={openCreateBrand}
-            >
-              Add Brand
-            </Button>
-          </div>
-          <Table
-            columns={brandColumns}
-            dataSource={allBrands}
-            size="small"
-            rowKey="_id"
-            pagination={{ pageSize: 8 }}
-          />
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 border">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Models</h2>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={openCreateModel}
-            >
-              Add Model
-            </Button>
-          </div>
-          <Table
-            columns={modelColumns}
-            dataSource={allModels}
-            rowKey="_id"
-            size="small"
-            pagination={{ pageSize: 8 }}
-          />
-        </div>
+    <div className="bg-white rounded-xl p-4 border">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Brands</h2>
+        <Button
+          type="primary"
+          size="small"
+          icon={<PlusOutlined />}
+          onClick={openCreateBrand}
+        >
+          Add
+        </Button>
       </div>
+      <Table
+        columns={brandColumns}
+        dataSource={allBrands}
+        size="small"
+        rowKey="_id"
+        pagination={{ pageSize: 12, size: "small" }}
+      />
 
       <Modal
         centered
@@ -375,35 +245,8 @@ const BrandAndModel = () => {
           </div>
         </Form>
       </Modal>
-
-      <Modal
-        centered
-        open={modelModalOpen}
-        onCancel={() => setModelModalOpen(false)}
-        onOk={submitModel}
-        okText={editingModel ? "Update" : "Create"}
-        title={editingModel ? "Edit Model" : "Add Model"}
-        width={560}
-      >
-        <Form form={modelForm} layout="vertical">
-          <Form.Item
-            name="title"
-            label="Model Title"
-            rules={[{ required: true, message: "Enter model title" }]}
-          >
-            <Input placeholder="Enter model title" />
-          </Form.Item>
-          <Form.Item
-            name="brandId"
-            label="Assigned Brand"
-            rules={[{ required: true, message: "Select a brand" }]}
-          >
-            <Select options={brandOptions} placeholder="Select brand" />
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   );
 };
 
-export default BrandAndModel;
+export default BrandSection;

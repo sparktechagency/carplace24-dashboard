@@ -85,6 +85,46 @@ const brandAndModelSlice = api.injectEndpoints({
         };
       },
     }),
+
+    //colors
+
+    getAllColors: builder.query({
+      query: () => {
+        return {
+          method: "GET",
+          url: "/color",
+        };
+      },
+    }),
+
+    createColor: builder.mutation({
+      query: (data: any) => {
+        return {
+          method: "POST",
+          url: "/color",
+          body: data,
+        };
+      },
+    }),
+
+    updateColor: builder.mutation({
+      query: (data: any) => {
+        return {
+          method: "PATCH",
+          url: `/color/${data.id}`,
+          body: data,
+        };
+      },
+    }),
+
+    deleteColor: builder.mutation({
+      query: (id: string) => {
+        return {
+          method: "DELETE",
+          url: `/color/${id}`,
+        };
+      },
+    }),
   }),
 });
 
@@ -99,4 +139,10 @@ export const {
   useCreateModelMutation,
   useUpdateModelMutation,
   useDeleteModelMutation,
+
+  //colors
+  useGetAllColorsQuery,
+  useCreateColorMutation,
+  useUpdateColorMutation,
+  useDeleteColorMutation,
 } = brandAndModelSlice;

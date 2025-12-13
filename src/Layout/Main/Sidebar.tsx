@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { IoIosLogOut } from "react-icons/io";
-import { IoSettingsOutline } from "react-icons/io5";
+import { IoCarSport, IoSettingsOutline } from "react-icons/io5";
 
 import { PiUserPlus } from "react-icons/pi";
 import Cookies from "js-cookie";
 import logo from "../../assets/Carplace24Logo.png";
-import { FaUsers } from "react-icons/fa6";
-import { FaHistory } from "react-icons/fa";
+import { FaMicroblog, FaUsers } from "react-icons/fa6";
 import { CiGrid32 } from "react-icons/ci";
 import { ImFolderUpload } from "react-icons/im";
-import { SiMaterialdesignicons } from "react-icons/si";
 import { GiFertilizerBag } from "react-icons/gi";
+import { TbBrandCakephp } from "react-icons/tb";
+import { RiUserSettingsFill } from "react-icons/ri";
 
 interface MenuItem {
   key: string;
@@ -66,27 +66,27 @@ const Sidebar = () => {
     },
     {
       key: "/manage-brand-and-model",
-      icon: <FaHistory size={24} />,
-      label: <Link to="/manage-brand-and-model">Brand and Model</Link>,
+      icon: <TbBrandCakephp size={24} />,
+      label: <Link to="/manage-brand-and-model">Brand, Model, Color</Link>,
     },
     {
       key: "/vehicle-list",
-      icon: <FaHistory size={24} />,
+      icon: <IoCarSport size={24} />,
       label: <Link to="/vehicle-list">Vehicle List</Link>,
     },
     {
       key: "/subscribers",
-      icon: <GiFertilizerBag size={24} />,
+      icon: <RiUserSettingsFill size={24} />,
       label: <Link to="/subscribers">Subscribers</Link>,
     },
     {
       key: "/subscriptions",
-      icon: <SiMaterialdesignicons size={24} />,
+      icon: <GiFertilizerBag size={24} />,
       label: <Link to="/subscriptions">Subscriptions</Link>,
     },
     {
       key: "/blogs",
-      icon: <SiMaterialdesignicons size={24} />,
+      icon: <FaMicroblog size={24} />,
       label: <Link to="/blogs">Blogs</Link>,
     },
     // {
