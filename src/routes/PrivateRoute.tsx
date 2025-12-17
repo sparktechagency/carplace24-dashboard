@@ -5,7 +5,6 @@ import { jwtDecode } from "jwt-decode";
 
 interface JwtPayload {
   role?: string;
-  // Add other properties if needed
 }
 
 interface PrivateRouteProps {
