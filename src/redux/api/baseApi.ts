@@ -15,7 +15,7 @@ const baseQueryWithReauth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   const baseQuery = fetchBaseQuery({
     // baseUrl: "http://10.10.7.72:5000/api/v1",
-    baseUrl: "https://83.228.197.97:5000/api/v1",
+    baseUrl: "http://83.228.197.97:5000/api/v1",
     prepareHeaders: (headers) => {
       const token =
         localStorage.getItem("carPlaceAdminToken") ||
@@ -114,4 +114,4 @@ export const api = createApi({
 
 // Export the image URL as a constant
 // export const imageUrl = "http://10.10.7.72:5000/";
-export const imageUrl = "https://83.228.197.97:5000/";
+export const imageUrl = "http://83.228.197.97:5000/";
