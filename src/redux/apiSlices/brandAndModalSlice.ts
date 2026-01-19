@@ -11,6 +11,16 @@ const brandAndModelSlice = api.injectEndpoints({
       },
     }),
 
+    createBulkBrands: builder.mutation({
+      query: (formData: FormData) => {
+        return {
+          method: "POST",
+          url: "/brand/bulk-upload",
+          body: formData,
+        };
+      },
+    }),
+
     createBrand: builder.mutation({
       query: (formData: FormData) => {
         return {
@@ -57,6 +67,16 @@ const brandAndModelSlice = api.injectEndpoints({
           method: "POST",
           url: "/models",
           body: model,
+        };
+      },
+    }),
+
+    createBulkModels: builder.mutation({
+      query: (formData: FormData) => {
+        return {
+          method: "POST",
+          url: "/models/bulk-upload",
+          body: formData,
         };
       },
     }),
@@ -131,12 +151,14 @@ const brandAndModelSlice = api.injectEndpoints({
 export const {
   useGetAllBrandsQuery,
   useCreateBrandMutation,
+  useCreateBulkBrandsMutation,
   useUpdateBrandMutation,
   useDeleteBrandMutation,
 
   //models
   useGetAllModelsQuery,
   useCreateModelMutation,
+  useCreateBulkModelsMutation,
   useUpdateModelMutation,
   useDeleteModelMutation,
 

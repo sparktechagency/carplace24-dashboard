@@ -23,13 +23,10 @@ import {
   useCreateBrandMutation,
   useUpdateBrandMutation,
   useDeleteBrandMutation,
-  useGetAllModelsQuery, // Needed to refetch models on brand delete if linked?
-  // Actually original code refetched models on brand delete: `refetchModels()`.
-  // So we need access to refetchModels or we just ignore it.
-  // Ideally deleting a brand deletes models or we cascade.
-  // The original code did `refetchModels()`.
-  // To keep exactly same behavior I might need to import it.
+  useGetAllModelsQuery,
+  useCreateBulkBrandsMutation,
 } from "@/redux/apiSlices/brandAndModalSlice";
+
 import { getImageUrl } from "@/utils/getImageUrl";
 
 type Brand = {
@@ -55,6 +52,7 @@ const BrandSection = () => {
   const { refetch: refetchModels } = useGetAllModelsQuery({});
 
   const [createBrand] = useCreateBrandMutation();
+  const [createBulkBrands] = useCreateBulkBrandsMutation();
   const [updateBrand] = useUpdateBrandMutation();
   const [deleteBrandMut] = useDeleteBrandMutation();
 
@@ -183,14 +181,36 @@ const BrandSection = () => {
     <div className="bg-white rounded-xl p-4 border">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Brands</h2>
-        <Button
-          type="primary"
-          size="small"
-          icon={<PlusOutlined />}
-          onClick={openCreateBrand}
-        >
-          Add
-        </Button>
+        <div className="flex items-center gap-2">
+          <Upload
+            showUploadList={false}
+            accept=".csv, .xlsx, .xls"
+            beforeUpload={async (file) => {
+              const fd = new FormData();
+              fd.append("file", file);
+              try {
+                await createBulkBrands(fd).unwrap();
+                toast.success("Bulk brands uploaded successfully");
+                refetchBrands();
+              } catch (error: any) {
+                toast.error(error?.data?.message || "Failed to upload brands");
+              }
+              return false;
+            }}
+          >
+            <Button size="small" icon={<UploadOutlined />}>
+              Bulk Upload
+            </Button>
+          </Upload>
+          <Button
+            type="primary"
+            size="small"
+            icon={<PlusOutlined />}
+            onClick={openCreateBrand}
+          >
+            Add
+          </Button>
+        </div>
       </div>
       <Table
         columns={brandColumns}

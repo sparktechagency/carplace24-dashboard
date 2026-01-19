@@ -46,7 +46,7 @@ const baseQueryWithReauth: BaseQueryFn<
           body: { refreshToken: refreshToken },
         },
         api,
-        extraOptions
+        extraOptions,
       );
 
       console.log("Refresh token API result:", refreshResult);
@@ -60,7 +60,7 @@ const baseQueryWithReauth: BaseQueryFn<
         localStorage.removeItem("carPlaceAdminToken");
         localStorage.setItem(
           "carPlaceAdminToken",
-          (refreshResult.data as any).data.accessToken
+          (refreshResult.data as any).data.accessToken,
         );
 
         // Retry the original request with the new token
@@ -82,7 +82,7 @@ const baseQueryWithReauth: BaseQueryFn<
       // Handle parsing errors - likely HTML response instead of JSON
       console.error(
         "Parsing error - received HTML instead of JSON:",
-        result.error
+        result.error,
       );
       // Don't show error toast for parsing errors during development
     } else {

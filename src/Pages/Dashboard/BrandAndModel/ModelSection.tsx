@@ -8,8 +8,15 @@ import {
   Select,
   Spin,
   Table,
+  Upload,
 } from "antd";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+
 import toast from "react-hot-toast";
 import {
   useGetAllModelsQuery,
@@ -17,6 +24,7 @@ import {
   useCreateModelMutation,
   useUpdateModelMutation,
   useDeleteModelMutation,
+  useCreateBulkModelsMutation,
 } from "@/redux/apiSlices/brandAndModalSlice";
 
 type Model = {
@@ -40,6 +48,7 @@ const ModelSection = () => {
   } = useGetAllModelsQuery({});
 
   const [createModel] = useCreateModelMutation();
+  const [createBulkModels] = useCreateBulkModelsMutation();
   const [updateModel] = useUpdateModelMutation();
   const [deleteModelMut] = useDeleteModelMutation();
 
@@ -132,14 +141,36 @@ const ModelSection = () => {
     <div className="bg-white rounded-xl p-4 border">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Models</h2>
-        <Button
-          type="primary"
-          size="small"
-          icon={<PlusOutlined />}
-          onClick={openCreateModel}
-        >
-          Add
-        </Button>
+        <div className="flex items-center gap-2">
+          <Upload
+            showUploadList={false}
+            accept=".csv, .xlsx, .xls"
+            beforeUpload={async (file) => {
+              const fd = new FormData();
+              fd.append("file", file);
+              try {
+                await createBulkModels(fd).unwrap();
+                toast.success("Bulk models uploaded successfully");
+                refetchModels();
+              } catch (error: any) {
+                toast.error(error?.data?.message || "Failed to upload models");
+              }
+              return false;
+            }}
+          >
+            <Button size="small" icon={<UploadOutlined />}>
+              Bulk Upload
+            </Button>
+          </Upload>
+          <Button
+            type="primary"
+            size="small"
+            icon={<PlusOutlined />}
+            onClick={openCreateModel}
+          >
+            Add
+          </Button>
+        </div>
       </div>
       <Table
         columns={modelColumns}
