@@ -52,7 +52,7 @@ const Users: React.FC = () => {
   });
 
   const handleDelete = (userId: string) => {
-    // console.log("delete user", userId);
+    console.log("delete user", userId);
   };
 
   const handleUpdateUserStatus = async (userId: string) => {

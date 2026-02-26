@@ -61,7 +61,7 @@ const BannerManagement = () => {
       title: "Banner No",
       dataIndex: "serialNo",
       key: "serialNo",
-      render: (_: any, record: any, index: number) => index + 1,
+      render: (_: any, _record: any, index: number) => index + 1,
     },
     {
       title: "Image Preview",

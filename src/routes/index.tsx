@@ -16,7 +16,6 @@ import UserProfile from "../Pages/Dashboard/AdminProfile/UserProfile";
 import TermsAndCondition from "../Pages/Dashboard/TermsAndCondition";
 import Faq from "../Pages/Dashboard/Faq";
 import AboutUs from "../components/ui/Settings/AboutUs";
-import OfferList from "../components/ui/Settings/OfferList";
 import Orders from "../Pages/Dashboard/Orders";
 import Dealers from "@/Pages/Dashboard/Dealers";
 import PrivateSeller from "@/Pages/Dashboard/PrivateSeller";
@@ -108,10 +107,10 @@ const router = createBrowserRouter([
         path: "about-us",
         element: <AboutUs />,
       },
-      {
-        path: "offer-list",
-        element: <OfferList />,
-      },
+      // {
+      //   path: "offer-list",
+      //   element: <OfferList />,
+      // },
       {
         path: "orders",
         element: <Orders />,

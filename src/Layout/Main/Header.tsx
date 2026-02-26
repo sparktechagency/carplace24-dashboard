@@ -1,6 +1,3 @@
-import { Link } from "react-router-dom";
-import { FaRegBell } from "react-icons/fa6";
-import { Badge } from "antd";
 import { useFetchAdminProfileQuery } from "../../redux/apiSlices/authSlice";
 import { getImageUrl } from "@/utils/getImageUrl";
 
@@ -17,11 +14,11 @@ const Header = () => {
 
   return (
     <div className="flex items-center gap-5 justify-end">
-      <Link to="/notification" className="h-fit mt-[10px]">
+      {/* <Link to="/notification" className="h-fit mt-[10px]">
         <Badge count={5}>
           <FaRegBell color="#4E4E4E" size={24} />
         </Badge>
-      </Link>
+      </Link> */}
 
       <div className="flex gap-2 items-center justify-center border-4 p-1 rounded-full">
         <img
