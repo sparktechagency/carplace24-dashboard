@@ -1,4 +1,3 @@
-
 import { Table, Button, Popconfirm } from "antd";
 import {
   DeleteOutlined,
@@ -202,8 +201,8 @@ const OfferList = () => {
             status === "Approved"
               ? "bg-green-200 text-green-800"
               : status === "Pending"
-              ? "bg-orange-200 text-orange-600"
-              : "bg-red-200 text-red-800"
+                ? "bg-orange-200 text-orange-600"
+                : "bg-red-200 text-red-800"
           }`}
         >
           {status}
@@ -243,17 +242,17 @@ const OfferList = () => {
   ];
 
   const handleDelete = (key: string) => {
-    console.log(`Deleting offer with key: ${key}`);
+    // console.log(`Deleting offer with key: ${key}`);
     // Add logic to delete offer here
   };
 
   const handleApprove = (key: string) => {
-    console.log(`Approving offer with key: ${key}`);
+    // console.log(`Approving offer with key: ${key}`);
     // Add logic to approve offer here
   };
 
   const handleReject = (key: string) => {
-    console.log(`Rejecting offer with key: ${key}`);
+    // console.log(`Rejecting offer with key: ${key}`);
     // Add logic to reject offer here
   };
 

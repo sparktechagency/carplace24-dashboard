@@ -24,7 +24,7 @@ const AboutUs = () => {
   }
 
   const aboutUsData = getAboutData?.data?.content || "";
-  console.log(aboutUsData);
+  // console.log(aboutUsData);
 
   const termsDataSave = async () => {
     const data = {

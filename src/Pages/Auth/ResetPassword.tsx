@@ -27,12 +27,12 @@ const ResetPassword = () => {
   const [resetPassword] = useResetPasswordMutation(); // Destructure mutation with loading state
 
   const onFinish = async (values: ResetPasswordFormValues): Promise<void> => {
-    console.log({ email, ...values });
+    // console.log({ email, ...values });
     const data: ResetPasswordRequest = { email, ...values }; // Combine email and new password values into an object
 
     try {
       const response = (await resetPassword(data).unwrap()) as ApiResponse;
-      console.log(response);
+      // console.log(response);
       if (response?.success) {
         message.success("Password updated successfully!");
         navigate(`/auth/login`);
@@ -41,7 +41,7 @@ const ResetPassword = () => {
       }
     } catch (error: any) {
       message.error(
-        error?.data?.message || "An error occurred. Please try again."
+        error?.data?.message || "An error occurred. Please try again.",
       );
     }
   };
@@ -95,7 +95,7 @@ const ResetPassword = () => {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The new password that you entered do not match!")
+                  new Error("The new password that you entered do not match!"),
                 );
               },
             }),

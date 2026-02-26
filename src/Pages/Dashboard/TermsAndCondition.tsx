@@ -13,7 +13,7 @@ const TermsAndCondition = () => {
   const [content, setContent] = useState("");
 
   const { data: termsAndCondition, isLoading } = useGetTermsAndConditionsQuery(
-    {}
+    {},
   );
   const [updateTermsAndConditions, { isLoading: isUpdating }] =
     useUpdateTermsAndConditionsMutation();
@@ -31,13 +31,13 @@ const TermsAndCondition = () => {
     const data = {
       content: content,
     };
-    console.log(data);
+    // console.log(data);
 
     try {
       const res = await updateTermsAndConditions(data).unwrap();
       if (res.success) {
         toast.success(
-          res?.message || "Terms and Conditions updated successfully"
+          res?.message || "Terms and Conditions updated successfully",
         );
         setContent(res.data.content);
       } else {

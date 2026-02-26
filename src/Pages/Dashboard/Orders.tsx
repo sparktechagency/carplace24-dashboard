@@ -1,4 +1,3 @@
-
 import { Table, Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 
@@ -134,7 +133,7 @@ const RunningOrders = () => {
   ];
 
   const handleDelete = (key: string): void => {
-    console.log(`Deleting order with key: ${key}`);
+    // console.log(`Deleting order with key: ${key}`);
     // Add logic to delete the order here
   };
 

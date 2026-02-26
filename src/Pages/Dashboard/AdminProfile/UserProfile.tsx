@@ -69,7 +69,7 @@ const PersonalInfo = () => {
 
       if (response.data) {
         toast.success(
-          response?.data?.message || "Profile updated successfully"
+          response?.data?.message || "Profile updated successfully",
         );
       } else {
         toast.error(response?.data?.message || "Failed to update profile");
@@ -80,7 +80,7 @@ const PersonalInfo = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    // console.log("Failed:", errorInfo);
   };
 
   return (

@@ -28,11 +28,11 @@ import Subscriptions from "@/Pages/Dashboard/Subscriptions";
 import BrandAndModel from "@/Pages/Dashboard/BrandAndModel";
 import PrivateRoute from "./PrivateRoute";
 import BlogsManagement from "@/Pages/Dashboard/BlogsManagement";
+import BannerManagement from "@/Pages/Dashboard/BannerManagement";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    // element: <ProtectedRoute><Main /></ProtectedRoute> ,
     element: (
       <PrivateRoute>
         <Main />
@@ -58,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "/private-seller-list",
         element: <PrivateSeller />,
+      },
+      {
+        path: "/banner-management",
+        element: <BannerManagement />,
       },
       {
         path: "/manage-brand-and-model",

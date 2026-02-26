@@ -1,4 +1,3 @@
-
 import { Button, DatePicker, Form, Input, Upload } from "antd";
 import { BiUpload } from "react-icons/bi";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
@@ -27,11 +26,11 @@ const CreateOffer = () => {
   const onFinish = (values: FormValues) => {
     // Simulate the image upload process
     const { upload, ...restValues } = values;
-    console.log("Form Data:", restValues);
+    // console.log("Form Data:", restValues);
 
     if (upload && upload.length > 0) {
       // Simulating successful file upload
-      console.log(`${upload[0].name} file uploaded successfully`);
+      // console.log(`${upload[0].name} file uploaded successfully`);
     }
   };
 
@@ -43,12 +42,12 @@ const CreateOffer = () => {
     },
     onChange(info: UploadChangeParam<UploadFile>) {
       if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
+        // console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        console.log(`${info.file.name} file uploaded successfully`);
+        // console.log(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === "error") {
-        console.log(`${info.file.name} file upload failed.`);
+        // console.log(`${info.file.name} file upload failed.`);
       }
     },
   };
@@ -87,10 +86,7 @@ const CreateOffer = () => {
             },
           ]}
         >
-          <Input.TextArea
-            placeholder="Enter offer description"
-            rows={4}
-          />
+          <Input.TextArea placeholder="Enter offer description" rows={4} />
         </Form.Item>
 
         <Form.Item

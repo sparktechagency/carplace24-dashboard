@@ -14,6 +14,7 @@ import { ImFolderUpload } from "react-icons/im";
 import { GiFertilizerBag } from "react-icons/gi";
 import { TbBrandCakephp } from "react-icons/tb";
 import { RiUserSettingsFill } from "react-icons/ri";
+import { TfiLayoutSlider } from "react-icons/tfi";
 
 interface MenuItem {
   key: string;
@@ -63,6 +64,11 @@ const Sidebar = () => {
       key: "/private-seller-list",
       icon: <ImFolderUpload size={24} />,
       label: <Link to="/private-seller-list">Private Seller List</Link>,
+    },
+    {
+      key: "/banner-management",
+      icon: <TfiLayoutSlider size={24} />,
+      label: <Link to="/banner-management">Banner Management</Link>,
     },
     {
       key: "/manage-brand-and-model",
@@ -174,7 +180,7 @@ const Sidebar = () => {
   useEffect(() => {
     const selectedItem = menuItems.find(
       (item) =>
-        item.key === path || item.children?.some((sub) => sub.key === path)
+        item.key === path || item.children?.some((sub) => sub.key === path),
     );
 
     if (selectedItem) {
@@ -184,7 +190,7 @@ const Sidebar = () => {
         setOpenKeys([selectedItem.key]);
       } else {
         const parentItem = menuItems.find((item) =>
-          item.children?.some((sub) => sub.key === path)
+          item.children?.some((sub) => sub.key === path),
         );
         if (parentItem) {
           setOpenKeys([parentItem.key]);

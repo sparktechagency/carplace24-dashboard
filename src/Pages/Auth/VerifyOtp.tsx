@@ -21,7 +21,7 @@ const VerifyOtp = () => {
   const [otp, setOtp] = useState<string>("");
   const email = new URLSearchParams(location.search).get("email"); // Get email from query params
 
-  console.log(typeof otp);
+  // console.log(typeof otp);
 
   const [otpVerify] = useOtpVerifyMutation();
   const [resendOtp] = useForgotPasswordMutation(); // RTK Query mutation for resending OTP
@@ -52,7 +52,7 @@ const VerifyOtp = () => {
       }).unwrap()) as ApiResponse;
 
       if (response?.success) {
-        console.log("OTP resent successfully");
+        // console.log("OTP resent successfully");
       } else {
         console.error("Failed to resend OTP");
       }

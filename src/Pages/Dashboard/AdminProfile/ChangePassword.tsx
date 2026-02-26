@@ -10,7 +10,7 @@ const ChangePassword = () => {
   const [form] = Form.useForm<ChangePasswordFormValues>();
 
   const handleChangePassword = (values: ChangePasswordFormValues) => {
-    console.log(values);
+    // console.log(values);
   };
 
   return (
@@ -54,8 +54,8 @@ const ChangePassword = () => {
                 if (!value || getFieldValue("current_password") === value) {
                   return Promise.reject(
                     new Error(
-                      "The new password and current password do not match!"
-                    )
+                      "The new password and current password do not match!",
+                    ),
                   );
                 }
                 return Promise.resolve();
@@ -86,7 +86,9 @@ const ChangePassword = () => {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The new password that you entered does not match!")
+                  new Error(
+                    "The new password that you entered does not match!",
+                  ),
                 );
               },
             }),

@@ -31,7 +31,7 @@ const Users: React.FC = () => {
     );
   }
 
-  console.log(searchText, roleFilter, statusFilter);
+  // console.log(searchText, roleFilter, statusFilter);
 
   const allUsersList = usersList?.data?.users || [];
 
@@ -52,7 +52,7 @@ const Users: React.FC = () => {
   });
 
   const handleDelete = (userId: string) => {
-    console.log("delete user", userId);
+    // console.log("delete user", userId);
   };
 
   const handleUpdateUserStatus = async (userId: string) => {

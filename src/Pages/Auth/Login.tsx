@@ -25,17 +25,21 @@ const Login = () => {
   const getErrorMessage = (err: any): string => {
     if (!err) return "An error occurred";
     if (typeof err === "string") return err;
-    const data = err?.data;
-    if (typeof data === "string") return data;
+
+    // Check for RTK Query error structure { status, data }
+    const data = err?.data || err; // Try both top-level and .data
+
     if (data && typeof data === "object") {
       if (data?.message) return data.message as string;
       if (
         Array.isArray(data?.errorMessages) &&
+        data.errorMessages.length > 0 &&
         data.errorMessages[0]?.message
       ) {
         return data.errorMessages[0].message as string;
       }
     }
+
     if (err?.message) return err.message as string;
     return "An error occurred";
   };
@@ -43,7 +47,7 @@ const Login = () => {
   const onFinish = async (values: LoginFormValues): Promise<void> => {
     try {
       const res = await login(values).unwrap();
-      console.log(res);
+      // console.log(res);
       if (res?.success) {
         const { accessToken } = res?.data || {};
         const { refreshToken } = res?.data || {};
@@ -55,14 +59,22 @@ const Login = () => {
           sessionStorage.setItem("carPlaceAdminToken", accessToken || "");
           sessionStorage.setItem(
             "carPlaceAdminRefreshToken",
-            refreshToken || ""
+            refreshToken || "",
           );
           Cookies.set("carPlaceAdminRefreshToken", refreshToken || "");
         }
         navigate("/");
-        toast.success(res?.message);
+        toast.success(res?.message || "Login successful!");
       } else {
-        toast.error(res?.message || "Login failed!");
+        // Even if succeed with unwrap, check success flag
+        const msg = getErrorMessage(res);
+        toast.error(msg, {
+          style: {
+            fontSize: "18px",
+            padding: "20px",
+            maxWidth: "600px",
+          },
+        });
       }
     } catch (error: any) {
       const msg = getErrorMessage(error);

@@ -11,6 +11,11 @@ export interface Blog {
   updatedAt?: string;
 }
 
+export interface Banner {
+  _id: string;
+  image: string;
+}
+
 const blogSlice = api.injectEndpoints({
   endpoints: (builder) => ({
     getAllBlogs: builder.query<{ data: Blog[] }, void>({
@@ -54,6 +59,39 @@ const blogSlice = api.injectEndpoints({
       },
       invalidatesTags: ["Blogs"],
     }),
+
+    //banner-management
+
+    getAllBanners: builder.query<{ data: Banner[] }, void>({
+      query: () => {
+        return {
+          method: "GET",
+          url: "/banner",
+        };
+      },
+      providesTags: ["Banners"],
+    }),
+
+    createBanner: builder.mutation<any, FormData>({
+      query: (formData) => {
+        return {
+          method: "POST",
+          url: "/banner",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["Banners"],
+    }),
+
+    deleteBanner: builder.mutation<any, string>({
+      query: (id) => {
+        return {
+          method: "DELETE",
+          url: `/banner/${id}`,
+        };
+      },
+      invalidatesTags: ["Banners"],
+    }),
   }),
 });
 
@@ -62,5 +100,9 @@ export const {
   useCreateBlogMutation,
   useUpdateBlogMutation,
   useDeleteBlogMutation,
-} = blogSlice;
 
+  //banner
+  useGetAllBannersQuery,
+  useCreateBannerMutation,
+  useDeleteBannerMutation,
+} = blogSlice;
